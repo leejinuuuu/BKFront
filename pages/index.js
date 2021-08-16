@@ -3,7 +3,7 @@ import React from 'react';
 const home = () => {
     return (
         <div>
-            hello next
+            {process.env.NODE_ENV}
         </div>
     )
 };
