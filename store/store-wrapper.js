@@ -15,10 +15,7 @@ const bindMiddleware = (middleware) => {
 
 const makeStore = context => {
     const sagaMiddleware = createSagaMiddleware();
-    const store = createStore(
-        rootReducer,
-        bindMiddleware([sagaMiddleware]),
-    );
+    const store = createStore(rootReducer, bindMiddleware([sagaMiddleware]))
 
     store.sagaTask = sagaMiddleware.run(rootSaga)
 
