@@ -10,7 +10,7 @@ import {useRouter} from "next/router";
 const login = () => {
     const googleURL = "https://accounts.google.com/o/oauth2/v2/auth?" +
         "client_id=512265054010-g3t0difpimrb59jr33dqld08gqkr7ijf.apps.googleusercontent.com&" +
-        "redirect_uri=http://localhost:8000/foo/auth&" +
+        "redirect_uri=http://localhost:8081/auth&" +
         "response_type=code&" +
         "scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile&" +
         "access_type=offline"
