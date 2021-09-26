@@ -1,18 +1,20 @@
 import produce from "immer";
 import {
-    GET_LOGIN_PLATFORM_REQUEST,
-    GOOGLE_LOAD_USER_FAILURE,
-    GOOGLE_LOAD_USER_REQUEST, GOOGLE_LOAD_USER_SUCCESS,
-    GOOGLE_LOGIN_REQUEST, LOCAL_LOGIN_REQUEST,
+    GET_LOGIN_PLATFORM_REQUEST, LOAD_USER_FAILURE,
+    LOAD_USER_REQUEST, LOAD_USER_SUCCESS,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
-    LOGIN_SUCCESS
+    LOGIN_SUCCESS, SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS
 } from "../config/event/eventName/userEvent";
 
 const initialState = {
     isLoggedIn: false,
     isLoggingIn: false,
     logInError: "",
+
+    isSignedUp: false,
+    isSigningUp: false,
+    signUpError: "",
 
     isLoadingProfile: false,
     isLoadedProfile: false,
@@ -42,21 +44,27 @@ const userReducer = (state = initialState, action) => {
                 draft.isLoggedIn = true;
                 draft.logInError = action.error;
                 break;
-            case GOOGLE_LOGIN_REQUEST:
-                draft.login_platform = "google";
+            case SIGNUP_REQUEST:
+                draft.isSigningUp = true;
                 break;
-            case LOCAL_LOGIN_REQUEST:
-                draft.login_platform = "local";
+            case SIGNUP_SUCCESS:
+                draft.isSignedUp = true;
+                draft.isSigningUp = false;
                 break;
-            case GOOGLE_LOAD_USER_REQUEST:
+            case SIGNUP_FAILURE:
+                draft.isSignedUp = false;
+                draft.isSigningUp = false;
+                draft.signUpError = action.error;
+                break;
+            case LOAD_USER_REQUEST:
                 draft.isLoadingProfile = true;
                 break;
-            case GOOGLE_LOAD_USER_SUCCESS:
+            case LOAD_USER_SUCCESS:
                 draft.isLoadingProfile = false;
                 draft.isLoadedProfile = true;
                 draft.user = action.data;
                 break;
-            case GOOGLE_LOAD_USER_FAILURE:
+            case LOAD_USER_FAILURE:
                 draft.isLoadingProfile = false;
                 draft.isLoadedProfile = false;
                 draft.LoadingProfileError = action.error;

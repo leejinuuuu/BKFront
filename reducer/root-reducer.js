@@ -2,6 +2,7 @@ import {HYDRATE} from 'next-redux-wrapper';
 import {combineReducers} from 'redux';
 
 import userReducer from './user-reducer';
+import modalReducer from "./modal-reducer";
 
 const rootReducer = (state, action) => {
     switch (action.type) {
@@ -13,7 +14,8 @@ const rootReducer = (state, action) => {
             };
         default: {
             const combineReducer = combineReducers({
-                userReducer
+                userReducer,
+                modalReducer
             });
             return combineReducer(state, action);
         }
