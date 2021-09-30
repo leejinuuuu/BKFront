@@ -2,16 +2,22 @@ import {all, fork} from 'redux-saga/effects';
 
 import createSaga from "../utils/createSaga";
 
-const watchLogin = createSaga("LOGIN", "http://localhost:8081/login", "post");
+const watchLogIn = createSaga("LOGIN", "http://localhost:8081/login", "post");
 
-const watchSignup  = createSaga("SIGNUP", "http://localhost:8081/signup", "post");
+const watchLogOut = createSaga("LOGOUT", "http://localhost:8081/logout", "get");
 
-const watchLoadProfile = createSaga("GOOGLE_LOAD_USER", "http://localhost:8081/user", "get");
+const watchSignUp  = createSaga("SIGNUP", "http://localhost:8081/signup", "post");
+
+const watchLoadUser = createSaga("LOAD_USER", "http://localhost:8081/user", "get");
+
+const watchLoadMyProfile = createSaga("LOAD_MY_PROFILE", "http://localhost:8081/profile", "get");
 
 export default function* userSaga() {
     yield all([
-        fork(watchLogin),
-        fork(watchLoadProfile),
-        fork(watchSignup)
+        fork(watchLogIn),
+        fork(watchLoadUser),
+        fork(watchSignUp),
+        fork(watchLogOut),
+        fork(watchLoadMyProfile)
     ]);
 }

@@ -1,10 +1,21 @@
 import produce from "immer";
 import {
-    GET_LOGIN_PLATFORM_REQUEST, LOAD_USER_FAILURE,
-    LOAD_USER_REQUEST, LOAD_USER_SUCCESS,
+    GET_LOGIN_PLATFORM_REQUEST,
+    LOAD_MY_PROFILE_FAILURE,
+    LOAD_MY_PROFILE_REQUEST,
+    LOAD_MY_PROFILE_SUCCESS,
+    LOAD_USER_FAILURE,
+    LOAD_USER_REQUEST,
+    LOAD_USER_SUCCESS,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
-    LOGIN_SUCCESS, SIGNUP_FAILURE, SIGNUP_REQUEST, SIGNUP_SUCCESS
+    LOGIN_SUCCESS,
+    LOGOUT_FAILURE,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCESS,
+    SIGNUP_FAILURE,
+    SIGNUP_REQUEST,
+    SIGNUP_SUCCESS
 } from "../config/event/eventName/userEvent";
 
 const initialState = {
@@ -12,17 +23,24 @@ const initialState = {
     isLoggingIn: false,
     logInError: "",
 
+    isLoggedOut: false,
+    isLoggingOut: false,
+    logOutError: "",
+
     isSignedUp: false,
     isSigningUp: false,
     signUpError: "",
 
-    isLoadingProfile: false,
-    isLoadedProfile: false,
-    LoadingProfileError: "",
+    isLoadingUser: false,
+    isLoadedUser: false,
+    LoadingUserError: "",
+
+    isLoadingMyProfile: false,
+    isLoadedMyProfile: false,
+    LoadingMyProfileError: "",
 
     user: null,
-    isSent: false,
-    login_platform: ""
+    myProfile: null
 }
 
 const userReducer = (state = initialState, action) => {
@@ -44,6 +62,19 @@ const userReducer = (state = initialState, action) => {
                 draft.isLoggedIn = true;
                 draft.logInError = action.error;
                 break;
+            case LOGOUT_REQUEST:
+                draft.isLoggingOut = true;
+                break;
+            case LOGOUT_SUCCESS:
+                draft.isLoggingOut = false;
+                draft.isLoggedOut = true;
+                draft.user = null;
+                break;
+            case LOGOUT_FAILURE:
+                draft.isLoggingOut = false;
+                draft.isLoggedOut = true;
+                draft.logOutError = action.error;
+                break;
             case SIGNUP_REQUEST:
                 draft.isSigningUp = true;
                 break;
@@ -57,17 +88,32 @@ const userReducer = (state = initialState, action) => {
                 draft.signUpError = action.error;
                 break;
             case LOAD_USER_REQUEST:
-                draft.isLoadingProfile = true;
+                draft.isLoadingUser = true;
                 break;
             case LOAD_USER_SUCCESS:
-                draft.isLoadingProfile = false;
-                draft.isLoadedProfile = true;
+                draft.isLoadingUser = false;
+                draft.isLoadedUser = true;
                 draft.user = action.data;
                 break;
             case LOAD_USER_FAILURE:
-                draft.isLoadingProfile = false;
-                draft.isLoadedProfile = false;
-                draft.LoadingProfileError = action.error;
+                draft.isLoadingUser = false;
+                draft.isLoadedUser = false;
+                draft.LoadingUserError = action.error;
+                draft.user = null
+                break;
+            case LOAD_MY_PROFILE_REQUEST:
+                draft.isLoadingMyProfile = true;
+                break;
+            case LOAD_MY_PROFILE_SUCCESS:
+                draft.isLoadingMyProfile = false;
+                draft.isLoadedMyProfile = true;
+                draft.myProfile = action.data;
+                break;
+            case LOAD_MY_PROFILE_FAILURE:
+                draft.isLoadingMyProfile = false;
+                draft.isLoadedMyProfile = false;
+                draft.myProfile = null;
+                draft.LoadingMyProfileError = null;
                 break;
             default:
                 break;

@@ -4,17 +4,19 @@ import axios from "axios";
 axios.defaults.withCredentials=true
 
 const createSaga = (name, url, method) => {
-    function eventAPI(data) {
+    function eventAPI(action) {
         return axios({
             method: method,
             url: url,
-            data,
+            params: action.params,
+            data: action.data,
         }).then( res => res.data);
     }
 
     const eventVar = function* event(action) {
         try {
-            const result = yield call(eventAPI, action.data);
+            const result = yield call(eventAPI, action);
+            console.log("qwerqwer", result)
             yield put({
                 type: name + "_SUCCESS",
                 data: result

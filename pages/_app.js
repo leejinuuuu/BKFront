@@ -8,6 +8,7 @@ import wrapper from '../store/store-wrapper'
 
 import "../css/scrollbar.css"
 
+
 function str_obj(str) {
     let result = {};
     if(str) {

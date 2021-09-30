@@ -6,7 +6,7 @@ const RecommendAccount = () => {
     <div className="ui items" style={{marginLeft: "30px"}}>
       <div className="item">
         <div className="ui small image">
-          <Image style={{width: "40px"}} src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png" roundedCircle />
+          <Image style={{width: "40px"}} src="http://localhost:8081/paka.png" roundedCircle />
         </div>
         <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>
           <div className="header" style={{fontSize: "90%"}}>다라바</div>

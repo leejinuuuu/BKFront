@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   Button,
   ButtonGroup,
@@ -11,8 +11,21 @@ import {
   Navbar,
   Row
 } from "react-bootstrap";
+import {useDispatch, useSelector} from "react-redux";
+import Link from 'next/link'
+import {LOGOUT_REQUEST} from "../config/event/eventName/userEvent";
 
 const AppLayout = ({ children }) => {
+  const dispatch = useDispatch()
+
+  const { user } = useSelector(state => state.userReducer)
+
+  const handleLogOut = useCallback(() => {
+    dispatch({
+      type: LOGOUT_REQUEST
+    })
+  }, [])
+
   return (
     <div>
       <Row style={{width: "100%"}}>
@@ -30,7 +43,7 @@ const AppLayout = ({ children }) => {
                     navbarScroll
                   >
                   </Nav>
-                  <Form className="d-flex" style={{ marginLeft: "28%", width: "400px" }}>
+                  <Form className="d-flex" style={{ marginLeft: "20%", width: "400px" }}>
                     <FormControl
                       type="search"
                       placeholder="Search"
@@ -39,20 +52,22 @@ const AppLayout = ({ children }) => {
                     />
                   </Form>
                 </Navbar.Collapse>
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle split variant="light" id="dropdown-custom-2">
-                    <Image src="https://i.stack.imgur.com/frlIf.png" roundedCircle style={{width: "25px", marginRight: "6px"}}/>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="super-colors">
-                    <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-                    <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-                    <Dropdown.Item eventKey="3" active>
-                      Active Item
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                {user !== null && user !== '' ?
+                  <Dropdown as={ButtonGroup}>
+                    <Dropdown.Toggle split variant="light" id="dropdown-custom-2">
+                      <Image src="https://i.stack.imgur.com/frlIf.png" roundedCircle style={{width: "25px", marginRight: "6px"}}/>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="super-colors">
+                      <Dropdown.Item eventKey="1" href="/profile">Profile</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item eventKey="4" onClick={handleLogOut}>Log-Out</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>:
+                  <span>
+                    <Link href="/login"><Button variant="outline-success">Sign-Up</Button></Link>{' '}
+                    <Link href="/preference"><Button variant="outline-success">Sign-Up</Button></Link>{' '}
+                  </span>
+                }
               </Container>
             </Navbar>
           </Row>
