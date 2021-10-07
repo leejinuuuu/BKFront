@@ -1,7 +1,7 @@
 import React from 'react'
 import {Image} from "react-bootstrap";
 
-const FollowAccount = ({accounts}) => {
+const FollowAccount = ({accounts, isFollower}) => {
   return(
     <div className="ui items" style={{marginLeft: "30px"}}>
       {accounts.map(account => {
@@ -16,6 +16,7 @@ const FollowAccount = ({accounts}) => {
                 <span className="price" style={{fontSize: "90%"}}>추천작가</span>
               </div>
             </div>
+            <div style={{marginRight: "6%"}}>{isFollower ? <i className="heartbeat icon"/> : <i className="heart icon"/>}</div>
           </div>
         )
       })}

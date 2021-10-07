@@ -98,7 +98,7 @@ const userReducer = (state = initialState, action) => {
             case LOAD_USER_FAILURE:
                 draft.isLoadingUser = false;
                 draft.isLoadedUser = false;
-                draft.LoadingUserError = action.error;
+                draft.LoadingUserError = "action.error";
                 draft.user = null
                 break;
             case LOAD_MY_PROFILE_REQUEST:

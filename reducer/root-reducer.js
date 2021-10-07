@@ -3,6 +3,7 @@ import {combineReducers} from 'redux';
 
 import userReducer from './user-reducer';
 import modalReducer from "./modal-reducer";
+import postReducer from "./post-reducer";
 
 const rootReducer = (state, action) => {
     switch (action.type) {
@@ -15,7 +16,8 @@ const rootReducer = (state, action) => {
         default: {
             const combineReducer = combineReducers({
                 userReducer,
-                modalReducer
+                modalReducer,
+                postReducer
             });
             return combineReducer(state, action);
         }

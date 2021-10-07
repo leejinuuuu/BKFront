@@ -1,42 +1,93 @@
-import React, {useCallback, useState} from 'react'
-import {Button, Modal} from "react-bootstrap";
+import React, {useCallback, useEffect, useState} from 'react'
 import PostModal from "./PostModal";
-import {useDispatch, useSelector} from "react-redux";
-import {SHOW_MODAL} from "../config/event/eventName/modal";
-import modalReducer from "../reducer/modal-reducer";
+import {connect, useDispatch, useSelector} from "react-redux";
+import {SHOW_MODAL_REQUEST} from "../config/event/eventName/modal";
+import {LIKED_POST_REQUEST, UNLIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
 
 const PostCard = ({postInfo}) => {
   const dispatch = useDispatch();
+  const {user} = useSelector(state => state.userReducer)
+  const [liked, setLiked] = useState(false)
 
-  const handleModalShow = useCallback(() => {
-    dispatch({
-      type: SHOW_MODAL
+  const writer = postInfo.writerAccount === null ? postInfo.writerClan : postInfo.writerAccount
+
+  useEffect(() => {
+    setLiked(false)
+    postInfo.likerAccount.map(v => {
+      if(v.id === user.id) {
+        setLiked(true)
+      }
     })
-  }, [])
+  }, [postInfo.likerAccount])
+
+  const onClickHeart = useCallback((e) => {
+    if(liked === false) {
+      dispatch({
+        type: LIKED_POST_REQUEST,
+        data: {
+          userId: user.id,
+          postId: e.target.id,
+        },
+        plus: {
+          postId: e.target.id,
+          user: user
+        }
+      })
+    } else {
+      console.log("haha")
+      dispatch({
+        type: UNLIKED_POST_REQUEST,
+        data: {
+          userId: user.id,
+          postId: e.target.id
+        },
+        plus: {
+          postId: e.target.id,
+          user: user
+        }
+      })
+    }
+  }, [liked])
+
+  const handleModalShow = useCallback((e) => {
+    dispatch({
+      type: SHOW_MODAL_REQUEST,
+      params: {
+        id: e.target.id
+      }
+    })
+  }, [liked])
 
   return(
     <div>
-      <div className="ui card" >
+      <div className="ui card" style={{ height: "30%"}}>
         <div className="content">
-          <div className="right floated meta">14h</div>
-          <img className="ui avatar image" src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png"/>{postInfo}
+          <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
+          <img className="ui avatar image" src={"http://localhost:8081/image/" + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
         </div>
         <div className="image">
-          <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png"/>
+          <img src={"http://localhost:8081/image/" + postInfo.image}/>
         </div>
         <div className="content">
-          <span className="right floated">
-            <i className="heart outline like icon"></i>
-            17 likes
-          </span>
-          <span onClick={handleModalShow} style={{cursor: "pointer"}}>
-            <i className="comment icon"></i>
-            3 comments
+            {
+              liked ?
+                <span className="right floated">
+                  <i id={postInfo.id} onClick={onClickHeart} className="heart like icon"/>
+                  {postInfo.likerAccount.length + " likes"}
+                </span> :
+                <span className="right floated">
+                  <i id={postInfo.id} onClick={onClickHeart} className="heart outline like icon"/>
+                  {postInfo.likerAccount.length + " likes"}
+                </span>
+            }
+          <span id={postInfo.id} onClick={handleModalShow} style={{cursor: "pointer"}}>
+            <i id={postInfo.id} className="comment icon"/>
+            {" comments"}
           </span>
         </div>
         <div className="extra content">
           <div className="ui large transparent left icon input">
-            <i className="heart outline icon"></i>
+            <i className="heart outline icon"/>
             <input type="text" placeholder="Add Comment..."/>
           </div>
         </div>
@@ -46,4 +97,4 @@ const PostCard = ({postInfo}) => {
   )
 }
 
-export default PostCard;
+export default connect(state => state)(PostCard);

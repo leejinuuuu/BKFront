@@ -10,7 +10,7 @@ import {Col, Image, Row} from "react-bootstrap";
 import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
 import PostModal from "../component/PostModal";
-import {SHOW_MODAL} from "../config/event/eventName/modal";
+import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
 
 const home = () => {
   return (
@@ -31,19 +31,24 @@ const home = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(store =>
-    async ({ req, res, ...etc}) => {
-        const cookie = req ? req.headers.cookie : '';
-        axios.defaults.headers.Cookie = '';
-        axios.defaults.withCredentials = true;
-        if (req && cookie) {
-            axios.defaults.headers.Cookie = cookie;
-        }
-        store.dispatch({
-            type: LOAD_USER_REQUEST
-        });
-        store.dispatch(END);
-        await store.sagaTask.toPromise();
+  async ({ req, res, ...etc}) => {
+    const cookie = req ? req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    axios.defaults.withCredentials = true;
+    if (req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
     }
+    store.dispatch({
+        type: LOAD_USER_REQUEST
+    });
+
+    store.dispatch({
+      type: LOAD_ALL_POST_REQUEST
+    });
+
+    store.dispatch(END);
+    await store.sagaTask.toPromise();
+  }
 );
 
 

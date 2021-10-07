@@ -1,10 +1,11 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {LOGIN_REQUEST} from "../config/event/eventName/userEvent";
 import Link from 'next/link'
 import GoogleButton from "react-google-button";
 import {Divider} from "semantic-ui-react";
+import {useRouter} from "next/router";
 const login = () => {
     const googleURL = "https://accounts.google.com/o/oauth2/v2/auth?" +
         "client_id=512265054010-31avv85pu1ufi1jbrd9vu3s5kj1006pa.apps.googleusercontent.com&" +
@@ -15,6 +16,13 @@ const login = () => {
     ;
 
     const dispatch = useDispatch();
+    const router = useRouter();
+    const { isLoggedIn } = useSelector(state => state.userReducer);
+
+    if(isLoggedIn) {
+        alert("LogIn SUCCEED!!!")
+        router.push("/")
+    }
 
     const handleSubmit = useCallback(e => {
         e.preventDefault();

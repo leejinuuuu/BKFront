@@ -35,19 +35,22 @@ const signup = () => {
       birthDay.substring(0, birthDay.length-1);
 
 
+    const formData = new FormData();
+    formData.append("profile", e.target.querySelector("#formFileMultiple").files[0])
+    formData.append("username", username)
+    formData.append("password", password)
+    formData.append("birth", birth)
+
+
     dispatch({
       type: SIGNUP_REQUEST,
-      data: {
-        username: username,
-        password: password,
-        birth: birth
-      }
+      data: formData
     })
   }, [])
 
   return(
     <div>
-      <Row style={{marginTop: "20%"}}>
+      <Row style={{marginTop: "15%"}}>
         <Col lg={"4"}/>
         <Col lg={"4"}>
           <Form onSubmit={handleSubmit}>
@@ -88,8 +91,13 @@ const signup = () => {
                   ))}
                 </Form.Select>
               </Form.Group>
+
+              <Form.Group controlId="formFileMultiple" className="mb-3">
+                <Form.Label>Select Profile Image</Form.Label>
+                <Form.Control type="file" multiple />
+              </Form.Group>
             </Row>
-            <Button variant="outline-dark" style={{marginLeft: "26%", width: "50%"}}>
+            <Button type="submit" variant="outline-dark" style={{marginLeft: "26%", width: "50%"}}>
               Submit
             </Button>
           </Form>

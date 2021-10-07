@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   Button,
   ButtonGroup,
@@ -6,7 +6,7 @@ import {
   Container,
   Dropdown,
   Form,
-  FormControl, Image,
+  FormControl, Image, Modal,
   Nav,
   Navbar,
   Row
@@ -14,11 +14,16 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import Link from 'next/link'
 import {LOGOUT_REQUEST} from "../config/event/eventName/userEvent";
+import {Icon} from "semantic-ui-react";
+import UploadPostModal from "./UploadPostModal";
 
 const AppLayout = ({ children }) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.userReducer)
+
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
 
   const handleLogOut = useCallback(() => {
     dispatch({
@@ -74,6 +79,12 @@ const AppLayout = ({ children }) => {
           <Row>
             {children}
           </Row>
+          <div style={{position: "fixed", bottom: "10%", right: "22%"}}>
+            <Button onClick={handleShow} variant="outline-info" style={{borderRadius: "50%", height: "60px", width: "60px", position: "absolute", zIndex: "0"}}>
+              <i className="plus icon"/>
+            </Button>
+          </div>
+          <UploadPostModal show={show} setShow={setShow}/>
         </Col>
         <Col lg={"2"} xxl={"3"}/>
       </Row>

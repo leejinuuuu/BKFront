@@ -1,29 +1,33 @@
 import React, {useCallback, useState} from 'react'
 import PostModal from "./PostModal";
 import {useDispatch, useSelector} from "react-redux";
-import {SHOW_MODAL} from "../config/event/eventName/modal";
+import {SHOW_MODAL_REQUEST} from "../config/event/eventName/modal";
+import {LOAD_POST_WITH_REQUEST} from "../config/event/eventName/postEvent";
 
 const SimplePostCard = ({postInfo}) => {
   const dispatch = useDispatch();
 
-  const handleModalShow = useCallback(() => {
+  const handleModalShow = useCallback((e) => {
     dispatch({
-      type: SHOW_MODAL
+      type: SHOW_MODAL_REQUEST,
+      params: {
+        id: e.target.id
+      }
     })
   }, [])
 
   return(
-    <div>
-      <div className="ui card" onClick={handleModalShow}>
+    <span>
+      <div className="ui card" onClick={handleModalShow} style={{width: "100%"}}>
         <a className="image" href="#">
-          <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png"/>
+          <img id={postInfo.id} src = {"http://localhost:8081/image/" + postInfo.image}/>
         </a>
         <div className="content">
-          <a className="header" href="#">{postInfo}</a>
+          <a id={postInfo.id} className="header" href="#">{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}</a>
         </div>
       </div>
-      <PostModal/>
-    </div>
+      <PostModal postInfo={postInfo}/>
+    </span>
   )
 }
 
