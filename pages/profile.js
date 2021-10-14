@@ -58,10 +58,8 @@ const Profile = () => {
                 <Accordion defaultActiveKey="0">
                   <Accordion.Item eventKey="0">
                     <Accordion.Header><h3 className="ui header">내가 쓴 글</h3></Accordion.Header>
-                    <Accordion.Body>
-                      <div style={{padding: "2%"}}>
-                        {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard postInfo={v}/>)}
-                      </div>
+                    <Accordion.Body style={{padding: "2%"}}>
+                      {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard postInfo={v}/>)}
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="1">
@@ -79,8 +77,6 @@ const Profile = () => {
 
           <Row>
             <Col>
-
-
             </Col>
           </Row>
 

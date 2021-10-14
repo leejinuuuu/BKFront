@@ -8,43 +8,42 @@ import wrapper from '../store/store-wrapper'
 
 import "../css/scrollbar.css"
 
-
 function str_obj(str) {
-    let result = {};
-    if(str) {
-        str = str.split('; ');
-        for (let i = 0; i < str.length; i++) {
-            let cur = str[i].split('=');
-            result[cur[0]] = cur[1];
-        }
-        return result;
-    } else {
-        return "";
+  let result = {};
+  if(str) {
+    str = str.split('; ');
+    for (let i = 0; i < str.length; i++) {
+      let cur = str[i].split('=');
+      result[cur[0]] = cur[1];
     }
+    return result;
+  } else {
+    return "";
+  }
 }
 
 class MyApp extends App {
-    static getInitialProps = wrapper.getInitialAppProps(store => async ({Component, ctx}) => {
+  static getInitialProps = wrapper.getInitialAppProps(store => async ({Component, ctx}) => {
 
-        return {
-            pageProps: {
-                // Call page-level getInitialProps
-                // DON'T FORGET TO PROVIDE STORE TO PAGE
-                ...(Component.getInitialProps ? await Component.getInitialProps({...ctx, store}) : {}),
-                // Some custom thing for all pages
-                pathname: ctx.pathname,
-            },
-        };
+    return {
+      pageProps: {
+        // Call page-level getInitialProps
+        // DON'T FORGET TO PROVIDE STORE TO PAGE
+        ...(Component.getInitialProps ? await Component.getInitialProps({...ctx, store}) : {}),
+        // Some custom thing for all pages
+        pathname: ctx.pathname,
+      },
+    };
 
-    });
+  });
 
-    render() {
-        const {Component, pageProps} = this.props;
+  render() {
+    const {Component, pageProps} = this.props;
 
-        return (
-            <Component {...pageProps} />
-        );
-    }
+    return (
+      <Component {...pageProps} />
+    );
+  }
 }
 
 export default wrapper.withRedux(MyApp);

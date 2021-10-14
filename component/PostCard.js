@@ -1,13 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import PostModal from "./PostModal";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {SHOW_MODAL_REQUEST} from "../config/event/eventName/modal";
+import {SHOW_MODAL} from "../config/event/eventName/modal";
 import {LIKED_POST_REQUEST, UNLIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
 
 const PostCard = ({postInfo}) => {
   const dispatch = useDispatch();
   const {user} = useSelector(state => state.userReducer)
   const [liked, setLiked] = useState(false)
+  const [show, setShow] = useState(false)
 
   const writer = postInfo.writerAccount === null ? postInfo.writerClan : postInfo.writerAccount
 
@@ -34,7 +35,6 @@ const PostCard = ({postInfo}) => {
         }
       })
     } else {
-      console.log("haha")
       dispatch({
         type: UNLIKED_POST_REQUEST,
         data: {
@@ -50,13 +50,8 @@ const PostCard = ({postInfo}) => {
   }, [liked])
 
   const handleModalShow = useCallback((e) => {
-    dispatch({
-      type: SHOW_MODAL_REQUEST,
-      params: {
-        id: e.target.id
-      }
-    })
-  }, [liked])
+    setShow(true);
+  }, [show])
 
   return(
     <div>
@@ -92,7 +87,7 @@ const PostCard = ({postInfo}) => {
           </div>
         </div>
       </div>
-      <PostModal/>
+      <PostModal show={show} setShow={setShow} postInfo={postInfo}/>
     </div>
   )
 }

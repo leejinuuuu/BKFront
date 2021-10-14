@@ -1,5 +1,7 @@
 import produce from "immer";
 import {
+    AUTH_WITH_EMAIL_FAILURE,
+    AUTH_WITH_EMAIL_REQUEST, AUTH_WITH_EMAIL_SUCCESS,
     GET_LOGIN_PLATFORM_REQUEST,
     LOAD_MY_PROFILE_FAILURE,
     LOAD_MY_PROFILE_REQUEST,
@@ -39,6 +41,11 @@ const initialState = {
     isLoadedMyProfile: false,
     LoadingMyProfileError: "",
 
+    isSendingEmail: false,
+    isSendEmail: false,
+    sendingEmailError: "",
+
+    emailCode: "",
     user: null,
     myProfile: null
 }
@@ -114,6 +121,20 @@ const userReducer = (state = initialState, action) => {
                 draft.isLoadedMyProfile = false;
                 draft.myProfile = null;
                 draft.LoadingMyProfileError = null;
+                break;
+            case AUTH_WITH_EMAIL_REQUEST:
+                draft.isSendingEmail = true;
+                break;
+            case AUTH_WITH_EMAIL_SUCCESS:
+                draft.isSendingEmail = false;
+                draft.isSendEmail = true;
+                draft.emailCode = "" + action.data;
+                break;
+            case AUTH_WITH_EMAIL_FAILURE:
+                draft.isSendingEmail = false;
+                draft.isSendEmail = true;
+                draft.emailCode = null;
+                draft.sendingEmailError = "ERROR"
                 break;
             default:
                 break;

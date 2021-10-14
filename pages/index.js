@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import axios from "axios";
 import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
 import {END} from "redux-saga";
@@ -11,23 +11,28 @@ import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
 import PostModal from "../component/PostModal";
 import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
+import PreferenceCard from "../component/PreferenceCard";
+import useWindowSize from "../utils/useWindowSize";
 
 const home = () => {
+  const [width, height] = useWindowSize();
+
   return (
-      <div>
-        <AppLayout>
-          <Row style={{marginTop: "5%"}}>
-            <Col xs={"9"} >
-              <Post/>
-            </Col>
-            <Col xs={"3"} style={{marginLeft: "-15px"}}>
-              <div style={{marginLeft: "30px"}}>추천</div>
-              <RecommendAccount/>
-            </Col>
-          </Row>
-        </AppLayout>
-      </div>
-    )
+    <div>
+      <AppLayout>
+        <Row style={{marginTop: "5%"}}>
+          <Post/>
+        </Row>
+      </AppLayout>
+      {
+        width > 1400 ?
+          <div style={{position: "fixed", top: "10%", left: "6%"}}>
+            <div style={{marginLeft: "30px"}}>추천</div>
+            <RecommendAccount/>
+          </div> : null
+      }
+    </div>
+  )
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(store =>
@@ -35,16 +40,20 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     const cookie = req ? req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
-    if (req && cookie) {
-        axios.defaults.headers.Cookie = cookie;
-    }
-    store.dispatch({
-        type: LOAD_USER_REQUEST
-    });
 
-    store.dispatch({
-      type: LOAD_ALL_POST_REQUEST
-    });
+    if (req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+
+      if(cookie.includes("access_token")) {
+        store.dispatch({
+          type: LOAD_USER_REQUEST
+        });
+
+        store.dispatch({
+          type: LOAD_ALL_POST_REQUEST
+        });
+      }
+    }
 
     store.dispatch(END);
     await store.sagaTask.toPromise();

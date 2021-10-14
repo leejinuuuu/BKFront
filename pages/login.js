@@ -36,6 +36,10 @@ const login = () => {
         })
     }, [])
 
+    const handleGoogleLogin = useCallback(e => {
+
+    }, [])
+
     return (
         <Row style={{marginTop: "18%"}}>
             <Col xs={"4"}/>
@@ -54,10 +58,11 @@ const login = () => {
                         <Form.Check type="checkbox" label="Check me out" />
                     </Form.Group>
                     <Button variant="outline-primary" type="submit" style={{width: "100%", marginBottom: "2%"}}>
-                        Submit
+                        로그인
                     </Button>
+                    <Link href="/signup"><Button style={{width: "100%"}} variant="outline-success">회원 가입</Button></Link>{' '}
                     <Divider horizontal>Or</Divider>
-                    <Link href={googleURL}><GoogleButton  style={{width: "100%", marginBottom: "2%"}}>Google</GoogleButton></Link>
+                    <Link href={googleURL}><GoogleButton onClick={() => console.log("Clicked!!!")} style={{width: "100%", marginBottom: "2%"}}>Google</GoogleButton></Link>
                 </Form>
             </Col>
             <Col xs={"4"}/>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Col, Image, Row} from "react-bootstrap";
 import PostCard from "./PostCard";
 import SimplePostCard from "./SimplePostCard";
@@ -7,45 +7,44 @@ import {useSelector} from "react-redux";
 const Post = (show, setShow) => {
   const posts = [];
   const simplePosts = [];
-  const stackPosts = [];
 
   const {mainPost} = useSelector(state => state.postReducer)
 
-  for (let i = 0; i < Math.ceil(mainPost.length / 2) * 2; i+=2) {
+  for (let i = 0; i < Math.ceil(mainPost.length / 3) * 3; i+=3) {
     posts.push(
       <div key={i}>
         <Row style={{marginBottom: "5%"}}>
-          <Col xs={"6"}>
+          <Col xs={"4"}>
             <PostCard postInfo={mainPost[i]}/>
           </Col>
-          <Col xs={"6"}>
+          <Col xs={"4"}>
             {i >= mainPost.length-1 ? null : <PostCard postInfo={mainPost[i+1]}/> }
+          </Col>
+          <Col xs={"4"}>
+            {i >= mainPost.length-2 ? null : <PostCard postInfo={mainPost[i+2]}/> }
           </Col>
         </Row>
       </div>
     )
   }
 
-  for (let i = 0; i < Math.ceil(mainPost.length / 3) * 3; i+=3) {
+  for (let i = 0; i < Math.ceil(mainPost.length / 4) * 4; i+=4) {
     simplePosts.push(
       <Row>
-        <Col xs={"4"}>
+        <Col xs={"3"}>
           <SimplePostCard postInfo={mainPost[i]}/>
         </Col>
-        <Col xs={"4"}>
+        <Col xs={"3"}>
           {i >= mainPost.length-1 ? null : <SimplePostCard postInfo={mainPost[i+1]}/> }
         </Col>
-        <Col xs={"4"}>
+        <Col xs={"3"}>
           {i >= mainPost.length-2 ? null : <SimplePostCard postInfo={mainPost[i+2]}/> }
+        </Col>
+        <Col xs={"3"}>
+          {i >= mainPost.length-3 ? null : <SimplePostCard postInfo={mainPost[i+3]}/> }
         </Col>
       </Row>
 
-    )
-  }
-
-  for (let i = 0; i < 20; i++) {
-    stackPosts.push(
-      <Image width={i * 20} src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png" style={{margin: "2px"}}/>
     )
   }
 

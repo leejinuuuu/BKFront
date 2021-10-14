@@ -1,5 +1,6 @@
 import produce from "immer";
 import {
+  ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS,
   LIKED_POST_FAILURE,
   LIKED_POST_REQUEST,
   LIKED_POST_SUCCESS,
@@ -9,7 +10,6 @@ import {
   UNLIKED_POST_FAILURE,
   UNLIKED_POST_REQUEST,
   UNLIKED_POST_SUCCESS,
-  UPLOAD_POST_REQUEST,
   UPLOAD_POST_SUCCESS
 } from "../config/event/eventName/postEvent";
 
@@ -25,7 +25,11 @@ const initialState = {
 
   isUnLikingPost: false,
   isUnLikedPost: false,
-  UnLikedPostError: ""
+  UnLikedPostError: "",
+
+  isAddingComment: false,
+  isAddedComment: false,
+  AddCommentError: ""
 }
 
 const postReducer = (state = initialState, action) => {
@@ -47,9 +51,11 @@ const postReducer = (state = initialState, action) => {
         draft.loadingPostError = "ERROR";
         break;
       case LIKED_POST_REQUEST:
+        console.log("qwerqwer")
         draft.isLikingPost = true;
         break;
       case LIKED_POST_SUCCESS:
+        console.log("zxcvzxcv")
         draft.isLikingPost = false;
         draft.isLikedPost = true;
         draft.mainPost.map(v => {
@@ -83,6 +89,18 @@ const postReducer = (state = initialState, action) => {
       case UNLIKED_POST_FAILURE:
         draft.isUnLikingPost = false;
         draft.isUnLikedPost = false;
+        break;
+      case ADD_COMMENT_REQUEST:
+        draft.isAddingComment = true;
+        break;
+      case ADD_COMMENT_SUCCESS:
+        draft.isAddingComment = false;
+        draft.isAddedComment = true;
+        draft.mainPost.map(v => {
+          if(v.id === action.plus.postId) {
+            v.comment.push(action.data)
+          }
+        })
         break;
       default:
         break;
