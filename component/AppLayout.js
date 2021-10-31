@@ -5,8 +5,7 @@ import {
   Col,
   Container,
   Dropdown, DropdownButton,
-  Form,
-  FormControl, Image, Modal,
+  Image,
   Nav,
   Navbar,
   Row
@@ -14,8 +13,8 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import Link from 'next/link'
 import {LOGOUT_REQUEST} from "../config/event/eventName/userEvent";
-import {Icon} from "semantic-ui-react";
 import UploadPostModal from "./UploadPostModal";
+import {imageURL} from "../config/config";
 
 const AppLayout = ({ children }) => {
   const dispatch = useDispatch()
@@ -38,12 +37,12 @@ const AppLayout = ({ children }) => {
           {user !== null && user !== '' ?
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle split variant="light" id="dropdown-custom-2">
-                <Image src={"http://localhost:8081/image/" + user.profileImage} roundedCircle style={{width: "25px", marginRight: "6px"}}/>
+                <Image src={imageURL + user.profileImage} roundedCircle style={{width: "25px", marginRight: "6px"}}/>
               </Dropdown.Toggle>
               <Dropdown.Menu className="super-colors">
-                <Dropdown.Item eventKey="1" href="/profile">Profile</Dropdown.Item>
+                <Dropdown.Item eventKey="1" href={"/profile/" + user.username}>Profile</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item eventKey="4" onClick={handleLogOut}>Log-Out</Dropdown.Item>
+                <Dropdown.Item eventKey="4" onClick={handleLogOut} href={"/"}>Log-Out</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>:
             <span>

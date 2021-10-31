@@ -3,6 +3,7 @@ import PostModal from "./PostModal";
 import {useDispatch} from "react-redux";
 import {SHOW_MODAL} from "../config/event/eventName/modal";
 import {LOAD_POST_WITH_REQUEST} from "../config/event/eventName/postEvent";
+import {imageURL} from "../config/config";
 
 const SimplePostCard = ({postInfo}) => {
 
@@ -18,7 +19,7 @@ const SimplePostCard = ({postInfo}) => {
     <div>
       <div onClick={handleModalShow} className="ui card"  style={{width: "100%"}}>
         <a className="image" href="#">
-          <img id={postInfo.id} src = {"http://localhost:8081/image/" + postInfo.image}/>
+          <img id={postInfo.id} src = {imageURL + postInfo.image}/>
         </a>
         <div className="content">
           <a id={postInfo.id} className="header" href="#">{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}</a>

@@ -1,19 +1,62 @@
-import React from 'react'
-import {Accordion, Card, Col, Image, Row, useAccordionButton} from "react-bootstrap";
-import AppLayout from "../component/AppLayout";
-import RecommendAccount from "../component/RecommendAccount";
-import FollowAccount from "../component/FollowAccount";
-import {connect, useSelector} from "react-redux";
-import wrapper from "../store/store-wrapper";
+import React, {useCallback, useEffect, useState} from 'react'
+import {Accordion, Button,  Col, Image, Row} from "react-bootstrap";
+import AppLayout from "../../component/AppLayout";
+import FollowAccount from "../../component/FollowAccount";
+import {connect, useDispatch, useSelector} from "react-redux";
+import wrapper from "../../store/store-wrapper";
 import axios from "axios";
-import {LOAD_MY_PROFILE_REQUEST, LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
+import {
+  FOLLOW_ACCOUNT_REQUEST,
+  LOAD_MY_PROFILE_REQUEST,
+  LOAD_USER_REQUEST,
+  UNFOLLOW_ACCOUNT_REQUEST
+} from "../../config/event/eventName/userEvent";
 import {END} from "redux-saga";
-import ContextAwareToggle from "../component/ContextAwareToggle";
-import ThumbnailPostCard from "../component/ThumbnailPostCard";
+import ThumbnailPostCard from "../../component/ThumbnailPostCard";
+import ClanMakeModal from "../../component/ClanMakeModal";
+import JoinedClan from "../../component/JoinedClan";
 
 const Profile = () => {
+  const dispatch = useDispatch()
 
   const { user, myProfile } = useSelector(state => state.userReducer)
+
+  const [show, setShow] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false)
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    const followers = user.followers;
+    setIsFollowing(false);
+    for(let i=0; i<followers.length; i++) {
+      if(followers[i] === myProfile.username) {
+        setIsFollowing(true);
+        break;
+      }
+    }
+  }, [])
+
+  const onClickFollow = useCallback(() => {
+    if(isFollowing) {
+      dispatch({
+        type: UNFOLLOW_ACCOUNT_REQUEST,
+        data: {
+          followerId: user.id,
+          followeeId: myProfile.id
+        }
+      })
+    } else {
+      dispatch({
+        type: FOLLOW_ACCOUNT_REQUEST,
+        data: {
+          followerId: user.id,
+          followeeId: myProfile.id
+        }
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -26,6 +69,15 @@ const Profile = () => {
           <div style={{textAlign: "center"}}>
             <Image style={{marginTop: "-150px"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
             <h2>{myProfile.username}</h2>
+          </div>
+          <div style={{textAlign: "center", margin: "30px"}}>
+            {
+              user.username === myProfile.username ?
+                <Button variant="outline-dark" onClick={handleShow}>Create Clan</Button> :
+                isFollowing ?
+                  <Button variant="outline-dark" onClick={handleShow}>unFollow</Button> :
+                  <Button variant="outline-dark" onClick={handleShow}>Follow</Button>
+            }
           </div>
         </Col>
       </Row>
@@ -48,6 +100,15 @@ const Profile = () => {
                 <div className="ui text loader">Loading</div>
               </div>
               <FollowAccount accounts={myProfile.friend}/>
+            </div>
+          </div>
+          <div style={{marginBottom: "20px", marginTop: "10px"}}>
+            <h3 className="ui header">Clans</h3>
+            <div className="ui segment" style={{overflowY: "scroll", marginLeft: "-5px", height: "200px", overflowX: "hidden", marginTop: "-3px"}}>
+              <div className="ui inverted dimmer">
+                <div className="ui text loader">Loading</div>
+              </div>
+              <JoinedClan clans={myProfile.clans}/>
             </div>
           </div>
         </Col>
@@ -79,9 +140,9 @@ const Profile = () => {
             <Col>
             </Col>
           </Row>
-
         </Col>
       </Row>
+      <ClanMakeModal show={show} setShow={setShow} />
     </>
   )
 }
@@ -91,6 +152,9 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     const cookie = req ? req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
+
+    const { pid } = etc.query
+
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
@@ -99,22 +163,13 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
       type: LOAD_USER_REQUEST
     });
 
-    const user = await axios.get("http://localhost:8081/user").then(res => res.data)
+    store.dispatch({
+      type: LOAD_MY_PROFILE_REQUEST,
+      params: {
+        username: pid
+      }
+    });
 
-    if(user !== null) {
-      console.log("asdfasdf"+user.username)
-      store.dispatch({
-        type: LOAD_MY_PROFILE_REQUEST,
-        params: {
-          username: user.username
-        }
-      });
-    } else {
-      res.writeHead(302, { // or 301
-        Location: "http://localhost:3000/login",
-      });
-      res.end();
-    }
 
     store.dispatch(END);
     await store.sagaTask.toPromise();

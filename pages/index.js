@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import axios from "axios";
-import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
+import {GET_RECOMMEND_ACCOUNT_REQUEST, LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
 import {END} from "redux-saga";
 import wrapper from "../store/store-wrapper";
 import {connect, useDispatch, useSelector} from "react-redux";
@@ -17,6 +17,8 @@ import useWindowSize from "../utils/useWindowSize";
 const home = () => {
   const [width, height] = useWindowSize();
 
+  const { user } = useSelector(state => state.userReducer)
+
   return (
     <div>
       <AppLayout>
@@ -25,10 +27,10 @@ const home = () => {
         </Row>
       </AppLayout>
       {
-        width > 1400 ?
+        width > 1400 && user !== null && user !== "" ?
           <div style={{position: "fixed", top: "10%", left: "6%"}}>
             <div style={{marginLeft: "30px"}}>추천</div>
-            <RecommendAccount/>
+            <RecommendAccount accounts={user.recommends}/>
           </div> : null
       }
     </div>
@@ -50,7 +52,11 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
         });
 
         store.dispatch({
-          type: LOAD_ALL_POST_REQUEST
+          type: LOAD_ALL_POST_REQUEST,
+          params: {
+            offset: 0,
+            limit: 10
+          }
         });
       }
     }

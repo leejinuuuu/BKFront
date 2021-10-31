@@ -1,52 +1,73 @@
-import React from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {Image} from "react-bootstrap";
+import {useDispatch, useSelector} from "react-redux";
+import {imageURL} from "../config/config";
+import {FOLLOW_ACCOUNT_REQUEST, UNFOLLOW_ACCOUNT_REQUEST} from "../config/event/eventName/userEvent";
+import Link from 'next/link'
 
-const RecommendAccount = () => {
+const RecommendAccount = ({ accounts }) => {
+  const dispatch = useDispatch();
+
+  const { user } = useSelector(state => state.userReducer)
+  const [isClicked, setIsClicked] = useState(false)
+
+  useEffect(() => {
+    setIsClicked(!isClicked)
+  }, [accounts, isClicked])
+
+  const onClickFollow = useCallback((e) => {
+    let flag = false;
+
+    for(let i=0; i<accounts.length; i++) {
+      if(accounts[i].id === e.target.id) {
+        flag = accounts[i].isFollowed;
+        accounts[i].isFollowed = !accounts[i].isFollowed;
+      }
+    }
+
+    if(flag) {
+      dispatch({
+        type: UNFOLLOW_ACCOUNT_REQUEST,
+        data: {
+          followerId: user.id,
+          followeeId: e.target.id
+        }
+      })
+    } else {
+      dispatch({
+        type: FOLLOW_ACCOUNT_REQUEST,
+        data: {
+          followerId: user.id,
+          followeeId: e.target.id
+        }
+      })
+    }
+  }, [])
+
   return(
     <div className="ui items" style={{marginLeft: "30px"}}>
-      <div className="item">
-        <div className="ui small image">
-          <Image style={{width: "40px"}} src="http://localhost:8081/paka.png" roundedCircle />
-        </div>
-        <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>
-          <div className="header" style={{fontSize: "90%"}}>다라바</div>
-          <div className="meta" style={{marginTop: "1px"}}>
-            <span className="price" style={{fontSize: "90%"}}>추천작가</span>
-          </div>
-        </div>
-        <button className="ui active button" style={{width: "0px", height: "40px", left: "15%", position: "relative", zIndex: "0", backgroundColor: "white"}}>
-          Follow
-        </button>
-      </div>
-
-      <div className="item">
-        <div className="ui small image">
-          <Image style={{width: "40px"}} src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png" roundedCircle />
-        </div>
-        <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>
-          <div className="header" style={{fontSize: "90%"}}>다라바</div>
-          <div className="meta" style={{marginTop: "1px"}}>
-            <span className="price" style={{fontSize: "90%"}}>추천작가</span>
-          </div>
-        </div>
-        <button className="ui active button" style={{width: "0px", height: "40px", left: "15%", position: "relative", zIndex: "0", backgroundColor: "white"}}>
-          Follow
-        </button>
-      </div>
-      <div className="item">
-        <div className="ui small image">
-          <Image style={{width: "40px"}} src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png" roundedCircle />
-        </div>
-        <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>
-          <div className="header" style={{fontSize: "90%"}}>다라바</div>
-          <div className="meta" style={{marginTop: "1px"}}>
-            <span className="price" style={{fontSize: "90%"}}>추천작가</span>
-          </div>
-        </div>
-        <button className="ui active button" style={{width: "0px", height: "40px", left: "15%", position: "relative", zIndex: "0", backgroundColor: "white"}}>
-          Follow
-        </button>
-      </div>
+      {
+        accounts.map(v => {
+          return (
+            <div className="item">
+              <Link href={"/profile/" + v.username}>
+                <div className="ui small image" style={{cursor: "pointer"}}>
+                  <Image style={{width: "40px"}} src={imageURL + v.profileImage} roundedCircle />
+                </div>
+              </Link>
+              <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>
+                <div className="header" style={{fontSize: "90%"}}>{v.username}</div>
+                <div className="meta" style={{marginTop: "1px"}}>
+                  <span className="price" style={{fontSize: "90%"}}>추천작가</span>
+                </div>
+              </div>
+              <button onClick={onClickFollow} id={v.id} className="ui active button" style={{width: "0px", height: "40px", left: "15%", position: "relative", zIndex: "0", backgroundColor: "white"}}>
+                {v.isFollowed ? "unFollow" : "Follow"}
+              </button>
+            </div>
+          )
+        })
+      }
     </div>
   )
 }

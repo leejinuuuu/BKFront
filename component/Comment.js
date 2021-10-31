@@ -1,10 +1,24 @@
-import React from 'react'
-import {useSelector} from "react-redux";
+import React, {useCallback, useState} from 'react'
+import {useDispatch, useSelector} from "react-redux";
+import {PICK_COMMENT_TO_REPLY} from "../config/event/eventName/postEvent";
 
 const Comment = ({replyComment, commentInfo}) => {
-  const { postInfo } = useSelector(state => state.modalReducer)
-
+  const dispatch = useDispatch();
   const reply = [];
+
+  const [showReply, setShowReply] = useState(false);
+
+  const onClickReply = useCallback(() => {
+    dispatch({
+      type: PICK_COMMENT_TO_REPLY,
+      plus: commentInfo.id
+    })
+  }, [])
+
+  const onClickShowReply = useCallback(() => {
+    setShowReply(!showReply)
+  }, [showReply])
+
   for(let i=0; i<replyComment.length; i++) {
     reply.push(
       <div className="comment">
@@ -18,9 +32,6 @@ const Comment = ({replyComment, commentInfo}) => {
           </div>
           <div className="text">
             {replyComment[i].content}
-          </div>
-          <div className="actions">
-            <a className="reply">Reply</a>
           </div>
         </div>
       </div>
@@ -42,11 +53,12 @@ const Comment = ({replyComment, commentInfo}) => {
           <p>{commentInfo.content}</p>
         </div>
         <div className="actions">
-          <a className="reply">Reply</a>
+          <a className="reply" onClick={onClickReply}>Reply</a>
+          <a className="reply" onClick={onClickShowReply}>더보기</a>
         </div>
       </div>
       <div className="comments">
-        {reply}
+        {showReply ? reply : null}
       </div>
     </div>
   )

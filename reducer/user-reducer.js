@@ -1,8 +1,18 @@
 import produce from "immer";
 import {
     AUTH_WITH_EMAIL_FAILURE,
-    AUTH_WITH_EMAIL_REQUEST, AUTH_WITH_EMAIL_SUCCESS,
+    AUTH_WITH_EMAIL_REQUEST,
+    AUTH_WITH_EMAIL_SUCCESS,
+    CREATE_CLAN_FAILURE,
+    CREATE_CLAN_REQUEST,
+    CREATE_CLAN_SUCCESS,
+    GET_CLAN_DATA_FAILURE,
+    GET_CLAN_DATA_REQUEST,
+    GET_CLAN_DATA_SUCCESS,
     GET_LOGIN_PLATFORM_REQUEST,
+    GET_RECOMMEND_ACCOUNT_FAILURE,
+    GET_RECOMMEND_ACCOUNT_REQUEST,
+    GET_RECOMMEND_ACCOUNT_SUCCESS,
     LOAD_MY_PROFILE_FAILURE,
     LOAD_MY_PROFILE_REQUEST,
     LOAD_MY_PROFILE_SUCCESS,
@@ -17,8 +27,9 @@ import {
     LOGOUT_SUCCESS,
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
-    SIGNUP_SUCCESS
+    SIGNUP_SUCCESS, SUBSCRIBE_CLAN_SUCCESS, UNSUBSCRIBE_CLAN_SUCCESS
 } from "../config/event/eventName/userEvent";
+import {UPLOAD_CLAN_POST_SUCCESS} from "../config/event/eventName/postEvent";
 
 const initialState = {
     isLoggedIn: false,
@@ -45,9 +56,23 @@ const initialState = {
     isSendEmail: false,
     sendingEmailError: "",
 
+    isCreatingClan: false,
+    isCreatedClan: false,
+    createClanError: "",
+
+    isGettingClanData: false,
+    isGetClanData: false,
+    gettingClanDataError: "",
+
+    isGettingRecommendAccount : false,
+    isGetRecommendAccount : false,
+    getRecommendAccountError : "",
+
     emailCode: "",
     user: null,
-    myProfile: null
+    myProfile: null,
+    clanInfo: {},
+    recommendAccount: []
 }
 
 const userReducer = (state = initialState, action) => {
@@ -134,7 +159,63 @@ const userReducer = (state = initialState, action) => {
                 draft.isSendingEmail = false;
                 draft.isSendEmail = true;
                 draft.emailCode = null;
-                draft.sendingEmailError = "ERROR"
+                draft.sendingEmailError = "ERROR";
+                break;
+            case CREATE_CLAN_REQUEST:
+                draft.isCreatingClan = true;
+                break;
+            case CREATE_CLAN_SUCCESS:
+                draft.isCreatingClan = false;
+                draft.isCreatedClan = true;
+                draft.myProfile.clans.push(action.data);
+                break;
+            case CREATE_CLAN_FAILURE:
+                draft.isCreatingClan = false;
+                draft.isCreatedClan = false;
+                draft.createClanError = "ERROR";
+                break;
+            case GET_CLAN_DATA_REQUEST:
+                draft.isGettingClanData = true;
+                break;
+            case GET_CLAN_DATA_SUCCESS:
+                draft.isGettingClanData = false;
+                draft.isGetClanData = true;
+                draft.clanInfo = action.data;
+                break;
+            case GET_CLAN_DATA_FAILURE:
+                draft.isGettingClanData = false;
+                draft.isGetClanData = false;
+                draft.clanInfo = {};
+                draft.gettingClanDataError = "ERROR"
+                break;
+            case GET_RECOMMEND_ACCOUNT_REQUEST:
+                draft.isGettingRecommendAccount = false;
+                break;
+            case GET_RECOMMEND_ACCOUNT_SUCCESS:
+                draft.isGettingRecommendAccount = true;
+                draft.isGetRecommendAccount = true;
+                draft.recommendAccount = action.data;
+                break;
+            case GET_RECOMMEND_ACCOUNT_FAILURE:
+                draft.isGettingRecommendAccount = true;
+                draft.isGetRecommendAccount = true;
+                draft.recommendAccount = action.data;
+                draft.getRecommendAccountError = "ERROR";
+                break;
+            case UPLOAD_CLAN_POST_SUCCESS:
+                draft.clanInfo.posts.push(action.data);
+                break;
+            case SUBSCRIBE_CLAN_SUCCESS:
+                draft.clanInfo.subscriber.push(action.data);
+                break;
+            case UNSUBSCRIBE_CLAN_SUCCESS:
+                let index = 0;
+                draft.clanInfo.subscriber.forEach((v, i) => {
+                    if(v.id === action.data.id) {
+                        index = i;
+                    }
+                });
+                draft.clanInfo.subscriber.splice(index, 1);
                 break;
             default:
                 break;

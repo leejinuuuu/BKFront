@@ -1,17 +1,18 @@
-import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
+import {all, fork} from 'redux-saga/effects';
 import createSaga from "../utils/createSaga";
-import {LIKED_POST_FAILURE, LIKED_POST_REQUEST, LIKED_POST_SUCCESS} from "../config/event/eventName/postEvent";
-import axios from "axios";
+import {backURL} from "../config/config";
 
-const watchGetPost = createSaga("LOAD_ALL_POST", "http://localhost:8081/posts", "get");
+const watchGetPost = createSaga("LOAD_ALL_POST", backURL + "/posts", "get");
 
-const watchUploadPost = createSaga("UPLOAD_POST", "http://localhost:8081/upload", "post");
+const watchUploadPost = createSaga("UPLOAD_POST", backURL + "/upload", "post");
 
-const watchLikedPost = createSaga("LIKED_POST", "http://localhost:8081/post/like", "post");
+const watchLikedPost = createSaga("LIKED_POST", backURL + "/post/like", "post");
 
-const watchUnLikedPost = createSaga("UNLIKED_POST", "http://localhost:8081/post/unlike", "post");
+const watchUnLikedPost = createSaga("UNLIKED_POST", backURL + "/post/unlike", "post");
 
-const watchAddComment = createSaga("ADD_COMMENT", "http://localhost:8081/post/comment", "post");
+const watchAddComment = createSaga("ADD_COMMENT", backURL + "/post/comment", "post");
+
+const watchAddReply = createSaga("ADD_REPLY", backURL + "/post/comment/reply", "post");
 
 export default function* postSaga() {
   yield all([
@@ -19,6 +20,7 @@ export default function* postSaga() {
     fork(watchUploadPost),
     fork(watchLikedPost),
     fork(watchUnLikedPost),
-    fork(watchAddComment)
+    fork(watchAddComment),
+    fork(watchAddReply)
   ]);
 }

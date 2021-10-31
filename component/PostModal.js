@@ -2,12 +2,19 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {Button, Col, Container, Image, Modal, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import Comment from "./Comment";
-import {ADD_COMMENT_REQUEST, LIKED_POST_REQUEST, UNLIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
+import {
+  ADD_COMMENT_REQUEST,
+  ADD_REPLY_REQUEST,
+  LIKED_POST_REQUEST,
+  UNLIKED_POST_REQUEST
+} from "../config/event/eventName/postEvent";
+import {imageURL} from "../config/config";
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.userReducer)
+  const { commentPicked, commentToReply } = useSelector(state => state.postReducer)
 
   const handleModalClose = useCallback(() => {
     setShow(false)
@@ -33,19 +40,37 @@ const PostModal = ({postInfo, show, setShow}) => {
   }, [commentData])
 
   const handleSubmitComment = useCallback(() => {
-    dispatch({
-      type: ADD_COMMENT_REQUEST,
-      data: {
-        userId: user.id,
-        postId: postInfo.id,
-        content: commentData
-      },
-      plus: {
-        userId: user.id,
-        postId: postInfo.id,
-        content: commentData
-      }
-    })
+    if(commentPicked) {
+      dispatch({
+        type: ADD_REPLY_REQUEST,
+        data: {
+          userId: user.id,
+          commentId: commentToReply,
+          content: commentData
+        },
+        plus: {
+          userId: user.id,
+          commentId: commentToReply,
+          content: commentData,
+          writerName: user.username,
+          createdAt: new Date().toISOString()
+        }
+      })
+    } else {
+      dispatch({
+        type: ADD_COMMENT_REQUEST,
+        data: {
+          userId: user.id,
+          postId: postInfo.id,
+          content: commentData
+        },
+        plus: {
+          userId: user.id,
+          postId: postInfo.id,
+          content: commentData
+        }
+      })
+    }
     setCommentData("")
   }, [commentData, user, postInfo])
 
@@ -111,7 +136,7 @@ const PostModal = ({postInfo, show, setShow}) => {
                     transform: "translate(-50%, -50%)",
                     msTransform: "translate(-50%, -50%)"
                   }}>
-                    <Image width={"410px"} src={"http://localhost:8081/image/" + postInfo.image}/>
+                    <Image width={"410px"} src={imageURL + postInfo.image}/>
                   </div>
                 </div>
               </Col>
@@ -132,7 +157,7 @@ const PostModal = ({postInfo, show, setShow}) => {
                         <Image src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/000000/external-bookmark-interface-kiranshastry-lineal-kiranshastry.png" style={{cursor: "pointer", width: "30px"}}/>
                     </div>
                     <span className="ui icon input">
-                      <input style={{width: "280px"}} type="text" placeholder="Add..." onChange={handleCommentChange} value={commentData}/>
+                      <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>
                       <Button variant="outline-primary" style={{marginLeft: "5%"}} onClick={handleSubmitComment}>Post</Button>
                     </span>
                   </span>

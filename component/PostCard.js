@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import PostModal from "./PostModal";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {SHOW_MODAL} from "../config/event/eventName/modal";
 import {LIKED_POST_REQUEST, UNLIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
+import {imageURL} from "../config/config";
+import Link from 'next/link'
 
 const PostCard = ({postInfo}) => {
   const dispatch = useDispatch();
@@ -56,12 +57,16 @@ const PostCard = ({postInfo}) => {
   return(
     <div>
       <div className="ui card" style={{ height: "30%"}}>
-        <div className="content">
-          <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
-          <img className="ui avatar image" src={"http://localhost:8081/image/" + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
-        </div>
+        <Link href={
+          postInfo.writerAccount === null ? "/clan/" + postInfo.writerClan.name : "/profile/" + postInfo.writerAccount.username
+        }>
+          <div className="content">
+            <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
+            <img className="ui avatar image" src={imageURL + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
+          </div>
+        </Link>
         <div className="image">
-          <img src={"http://localhost:8081/image/" + postInfo.image}/>
+          <img src={imageURL + postInfo.image}/>
         </div>
         <div className="content">
             {
