@@ -12,8 +12,8 @@ const signup = () => {
   const {isSignedUp, emailCode} = useSelector(state => state.userReducer)
   const router = useRouter();
 
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [validated, setValidated] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(true);
+  const [validated, setValidated] = useState(true);
 
   const [defaultName, setDefaultName] = useState("");
   const [email1, setEmail1] = useState("");

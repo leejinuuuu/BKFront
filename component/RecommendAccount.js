@@ -11,17 +11,12 @@ const RecommendAccount = ({ accounts }) => {
   const { user } = useSelector(state => state.userReducer)
   const [isClicked, setIsClicked] = useState(false)
 
-  useEffect(() => {
-    setIsClicked(!isClicked)
-  }, [accounts, isClicked])
-
   const onClickFollow = useCallback((e) => {
+    setIsClicked(!isClicked)
     let flag = false;
-
     for(let i=0; i<accounts.length; i++) {
       if(accounts[i].id === e.target.id) {
         flag = accounts[i].isFollowed;
-        accounts[i].isFollowed = !accounts[i].isFollowed;
       }
     }
 
@@ -31,6 +26,9 @@ const RecommendAccount = ({ accounts }) => {
         data: {
           followerId: user.id,
           followeeId: e.target.id
+        },
+        plus: {
+          userId:  e.target.id
         }
       })
     } else {
@@ -39,6 +37,9 @@ const RecommendAccount = ({ accounts }) => {
         data: {
           followerId: user.id,
           followeeId: e.target.id
+        },
+        plus: {
+          userId:  e.target.id
         }
       })
     }

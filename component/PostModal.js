@@ -9,6 +9,7 @@ import {
   UNLIKED_POST_REQUEST
 } from "../config/event/eventName/postEvent";
 import {imageURL} from "../config/config";
+import FavoriteModal from "./FavoriteModal";
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
@@ -75,6 +76,9 @@ const PostModal = ({postInfo, show, setShow}) => {
   }, [commentData, user, postInfo])
 
   const [liked, setLiked] = useState(false)
+  const [showFavorite, setShowFavorite] = useState(false);
+
+  const handleShowFavorite = () => setShowFavorite(true);
 
   useEffect(() => {
     setLiked(false)
@@ -154,7 +158,7 @@ const PostModal = ({postInfo, show, setShow}) => {
                           <Image src="https://img.icons8.com/ios/50/000000/hearts--v1.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/>
                       }
 
-                        <Image src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/000000/external-bookmark-interface-kiranshastry-lineal-kiranshastry.png" style={{cursor: "pointer", width: "30px"}}/>
+                        <Image onClick={handleShowFavorite} src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/000000/external-bookmark-interface-kiranshastry-lineal-kiranshastry.png" style={{cursor: "pointer", width: "30px"}}/>
                     </div>
                     <span className="ui icon input">
                       <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>
@@ -167,6 +171,7 @@ const PostModal = ({postInfo, show, setShow}) => {
           </Container>
         </Modal.Body>
       </Modal>
+      <FavoriteModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>
     </span>
   )
 }
