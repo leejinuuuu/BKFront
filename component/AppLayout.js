@@ -19,7 +19,7 @@ import {imageURL} from "../config/config";
 const AppLayout = ({ children }) => {
   const dispatch = useDispatch()
 
-  const { user } = useSelector(state => state.userReducer)
+  const { isLoggedIn ,user } = useSelector(state => state.userReducer)
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
@@ -41,6 +41,7 @@ const AppLayout = ({ children }) => {
               </Dropdown.Toggle>
               <Dropdown.Menu className="super-colors">
                 <Dropdown.Item eventKey="1" href={"/profile/" + user.username}>Profile</Dropdown.Item>
+                <Dropdown.Item eventKey="2" href={"/alarm"}>Alarm</Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item eventKey="4" onClick={handleLogOut} href={"/"}>Log-Out</Dropdown.Item>
               </Dropdown.Menu>
@@ -64,13 +65,8 @@ const AppLayout = ({ children }) => {
             variant="outline-secondary"
             title="Menu"
           >
-            <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-            <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-            <Dropdown.Item eventKey="3" active>
-              Active Item
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
+            <Dropdown.Item eventKey="1" href={"/history"}>History</Dropdown.Item>
+            <Dropdown.Item eventKey="2" href={"/alarm"}>Alarm</Dropdown.Item>
           </DropdownButton>
         </Container>
       </Navbar>
@@ -87,7 +83,7 @@ const AppLayout = ({ children }) => {
               <i className="plus icon"/>
             </Button>
           </div>
-          <UploadPostModal show={show} setShow={setShow}/>
+          { isLoggedIn ? <UploadPostModal show={show} setShow={setShow}/> : null }
         </Col>
         <Col lg={"2"} xxl={"3"}/>
       </Row>

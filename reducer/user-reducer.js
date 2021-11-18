@@ -91,8 +91,8 @@ const userReducer = (state = initialState, action) => {
         draft.user = action.data;
         break;
       case LOGIN_FAILURE:
-        draft.isLoggingIn = false;
-        draft.isLoggedIn = true;
+        draft.isLoggedIn = false;
+        draft.isLoggingIn = true;
         draft.logInError = action.error;
         break;
       case LOGOUT_REQUEST:
@@ -124,6 +124,7 @@ const userReducer = (state = initialState, action) => {
         draft.isLoadingUser = true;
         break;
       case LOAD_USER_SUCCESS:
+        draft.isLoggedIn = true;
         draft.isLoadingUser = false;
         draft.isLoadedUser = true;
         draft.user = action.data;

@@ -43,7 +43,7 @@ const RecommendAccount = ({ accounts }) => {
         }
       })
     }
-  }, [])
+  }, [accounts, user])
 
   return(
     <div className="ui items" style={{marginLeft: "30px"}}>
