@@ -34,7 +34,7 @@ const AppLayout = ({ children }) => {
     <div>
       <Navbar bg="light" expand="lg">
         <Container>
-          {user !== null && user !== '' ?
+          {isLoggedIn ?
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle split variant="light" id="dropdown-custom-2">
                 <Image src={imageURL + user.profileImage} roundedCircle style={{width: "25px", marginRight: "6px"}}/>

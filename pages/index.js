@@ -46,11 +46,11 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
 
-      if(cookie.includes("access_token")) {
-        store.dispatch({
-          type: LOAD_USER_REQUEST
-        });
+      store.dispatch({
+        type: LOAD_USER_REQUEST
+      });
 
+      if(cookie.includes("access_token")) {
         store.dispatch({
           type: LOAD_ALL_POST_REQUEST,
           params: {
