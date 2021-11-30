@@ -8,6 +8,7 @@ import wrapper from '../store/store-wrapper'
 
 import "../css/scrollbar.css"
 import {SSRProvider} from "react-bootstrap";
+import {CookiesProvider} from "react-cookie";
 
 function str_obj(str) {
   let result = {};
@@ -42,9 +43,11 @@ class MyApp extends App {
     const {Component, pageProps} = this.props;
 
     return (
-      <SSRProvider>
-        <Component {...pageProps} />
-      </SSRProvider>
+      <CookiesProvider>
+        <SSRProvider>
+          <Component {...pageProps} />
+        </SSRProvider>
+      </CookiesProvider>
     );
   }
 }

@@ -6,6 +6,8 @@ import Link from 'next/link'
 import GoogleButton from "react-google-button";
 import {Divider} from "semantic-ui-react";
 import {useRouter} from "next/router";
+import {useCookies} from "react-cookie";
+
 const login = () => {
     const googleURL = "https://accounts.google.com/o/oauth2/v2/auth?" +
         "client_id=512265054010-31avv85pu1ufi1jbrd9vu3s5kj1006pa.apps.googleusercontent.com&" +
@@ -17,10 +19,14 @@ const login = () => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const { isLoggedIn } = useSelector(state => state.userReducer);
+    const { isLoggedIn, user } = useSelector(state => state.userReducer);
+    const [cookies, setCookie] = useCookies(['user']);
 
     if(isLoggedIn) {
         alert("LogIn SUCCEED!!!")
+        console.log(user.accessToken)
+        setCookie("accessToken", user.accessToken, {path: "/"})
+        setCookie("platform", user.platform, {path: "/"})
         router.push("/")
     }
 
@@ -34,6 +40,7 @@ const login = () => {
             type: LOGIN_REQUEST,
             data
         })
+
     }, [])
 
     const handleGoogleLogin = useCallback(e => {
