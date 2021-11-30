@@ -44,6 +44,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     axios.defaults.withCredentials = true;
 
     console.log("zxcv", cookie)
+    console.log("zxcv", res)
     console.log("zxcv", req)
 
     if (req && cookie) {
