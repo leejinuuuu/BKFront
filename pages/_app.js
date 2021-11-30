@@ -7,6 +7,7 @@ import 'semantic-ui-css/semantic.min.css'
 import wrapper from '../store/store-wrapper'
 
 import "../css/scrollbar.css"
+import {SSRProvider} from "react-bootstrap";
 
 function str_obj(str) {
   let result = {};
@@ -41,7 +42,9 @@ class MyApp extends App {
     const {Component, pageProps} = this.props;
 
     return (
-      <Component {...pageProps} />
+      <SSRProvider>
+        <Component {...pageProps} />
+      </SSRProvider>
     );
   }
 }

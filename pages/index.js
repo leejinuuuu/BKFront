@@ -43,14 +43,17 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
 
+    console.log("zxcv", cookie)
+    console.log("zxcv", req)
+
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
 
-      store.dispatch({
-        type: LOAD_USER_REQUEST
-      });
+      if(cookie.includes("accessToken")) {
+        store.dispatch({
+          type: LOAD_USER_REQUEST
+        });
 
-      if(cookie.includes("access_token")) {
         store.dispatch({
           type: LOAD_ALL_POST_REQUEST,
           params: {
