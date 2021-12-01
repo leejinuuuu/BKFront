@@ -1,4 +1,3 @@
-
 import App from 'next/app';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +8,7 @@ import wrapper from '../store/store-wrapper'
 import "../css/scrollbar.css"
 import {SSRProvider} from "react-bootstrap";
 import {CookiesProvider} from "react-cookie";
+import { Provider } from "next-auth/client"
 
 function str_obj(str) {
   let result = {};
@@ -45,7 +45,9 @@ class MyApp extends App {
     return (
       <CookiesProvider>
         <SSRProvider>
-          <Component {...pageProps} />
+          <Provider session={pageProps.session}>
+            <Component {...pageProps} />
+          </Provider>
         </SSRProvider>
       </CookiesProvider>
     );

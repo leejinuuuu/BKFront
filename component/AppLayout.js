@@ -15,20 +15,18 @@ import Link from 'next/link'
 import {LOGOUT_REQUEST} from "../config/event/eventName/userEvent";
 import UploadPostModal from "./UploadPostModal";
 import {imageURL} from "../config/config";
+import {useCookies} from "react-cookie";
+import { signIn, signOut, useSession } from "next-auth/client"
 
 const AppLayout = ({ children }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  const [session, loadingSession] = useSession();
 
-  const { isLoggedIn ,user } = useSelector(state => state.userReducer)
+  const { isLoggedIn ,user } = useSelector(state => state.userReducer);
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
-
-  const handleLogOut = useCallback(() => {
-    dispatch({
-      type: LOGOUT_REQUEST
-    })
-  }, [])
 
   return (
     <div>
@@ -43,7 +41,17 @@ const AppLayout = ({ children }) => {
                 <Dropdown.Item eventKey="1" href={"/profile/" + user.username}>Profile</Dropdown.Item>
                 <Dropdown.Item eventKey="2" href={"/alarm"}>Alarm</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item eventKey="4" onClick={handleLogOut} href={"/"}>Log-Out</Dropdown.Item>
+                <Dropdown.Item eventKey="4"
+                               onClick={
+                                 () => {
+                                   if(session) return signOut()
+                                   else {
+                                     removeCookie("accessToken")
+                                     removeCookie("platform")
+                                   }
+                                 }
+                               } href={"/"}>
+                  Log-Out</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>:
             <span>

@@ -5,19 +5,39 @@ import {END} from "redux-saga";
 import wrapper from "../store/store-wrapper";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
+import Router from 'next/router'
 import AppLayout from "../component/AppLayout";
 import {Col, Image, Row} from "react-bootstrap";
 import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
-import PostModal from "../component/PostModal";
 import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
-import PreferenceCard from "../component/PreferenceCard";
 import useWindowSize from "../utils/useWindowSize";
+import {useCookies} from "react-cookie";
+import {useSession} from "next-auth/client";
 
 const home = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [cookies, setCookie] = useCookies(['user']);
+  const [session, loadingSession] = useSession();
+
   const [width, height] = useWindowSize();
 
-  const { user } = useSelector(state => state.userReducer)
+  const { user, LoadingUserError} = useSelector(state => state.userReducer)
+
+  if (session) {
+    if(LoadingUserError) {
+      router.push("/signup?google="+ session.user.name)
+    }
+
+    dispatch({
+      type: LOAD_USER_REQUEST,
+      params: {
+        username: session.user.name,
+        email: session.user.email
+      }
+    })
+  }
 
   return (
     <div>
@@ -43,16 +63,16 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
 
-    console.log("zxcv", cookie)
-    console.log("zxcv", res)
-    console.log("zxcv", req)
-
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
 
       if(cookie.includes("accessToken")) {
         store.dispatch({
-          type: LOAD_USER_REQUEST
+          type: LOAD_USER_REQUEST,
+          params: {
+            username: "None",
+            email: "None",
+          }
         });
 
         store.dispatch({
