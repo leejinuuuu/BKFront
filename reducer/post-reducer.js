@@ -127,7 +127,7 @@ const postReducer = (state = initialState, action) => {
           let curPost = draft.mainPost[i];
           for(let j=0; j<curPost.comment.length; j++) {
             if(curPost.comment[j].id === draft.commentToReply) {
-              curPost.comment[j].replyComment.push(action.plus)
+              curPost.comment[j].replyComment.push(action.data)
               break;
             }
           }

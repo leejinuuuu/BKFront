@@ -160,7 +160,11 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     }
 
     store.dispatch({
-      type: LOAD_USER_REQUEST
+      type: LOAD_USER_REQUEST,
+      params: {
+        username: "None",
+        email: "None",
+      }
     });
 
     store.dispatch({

@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import {PICK_COMMENT_TO_REPLY} from "../config/event/eventName/postEvent";
+import {imageURL} from "../config/config";
 
 const Comment = ({replyComment, commentInfo}) => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Comment = ({replyComment, commentInfo}) => {
     reply.push(
       <div className="comment">
         <a className="avatar">
-          <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png"/>
+          <img src={imageURL + replyComment[i].writerProfileImage}/>
         </a>
         <div className="content">
           <a className="author">{replyComment[i].writerName}</a>
@@ -42,7 +43,7 @@ const Comment = ({replyComment, commentInfo}) => {
   return(
     <div className="comment">
       <a className="avatar">
-        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-300x300.png"/>
+        <img src={imageURL + commentInfo.writerProfileImage}/>
       </a>
       <div className="content">
         <a className="author">{commentInfo.writerName}</a>

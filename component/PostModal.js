@@ -129,7 +129,7 @@ const PostModal = ({postInfo, show, setShow}) => {
         centered
       >
         <Modal.Body className="show-grid" >
-          <Container >
+          <Container>
             <Row style={{height: "600px"}}>
               <Col xs={8}>
                 <div style={{height: "600px", position: "relative"}}>
@@ -145,27 +145,56 @@ const PostModal = ({postInfo, show, setShow}) => {
                 </div>
               </Col>
               <Col xs={4}>
-                <div className="ui comments" style={{overflowY: "scroll", marginLeft: "-5px", height: "460px", overflowX: "hidden"}}>
-                  {comments}
-                </div>
-                <div className="ui divider"/>
-                <form className="ui reply form" >
-                  <span>
-                    <div style={{ marginBottom: "10px" }}>
-                      {
-                        liked ?
-                          <Image src="https://img.icons8.com/color/48/000000/like--v3.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/> :
-                          <Image src="https://img.icons8.com/ios/50/000000/hearts--v1.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/>
-                      }
+                <Row>
+                  <div className="ui large feed">
+                    <div className="event">
+                      <div className="label">
+                        <img style={{marginTop: "10px"}} src="https://yt3.ggpht.com/ytc/AKedOLTQqgurRSivjU2ahR6UCt_vLqRN0r-RaGQ7G_uNMw=s900-c-k-c0x00ffffff-no-rj"/>
+                      </div>
+                      <div className="content">
+                        <div className="summary">
+                          <a className="user">
+                            {postInfo.writerAccount.username}
+                          </a> {"- " + postInfo.title}
+                          <div className="date">
+                            {postInfo.createdAt.substring(0, 10)}
+                          </div>
+                        </div>
+                        <div className="meta">
+                          <a className="like">
+                            <i className="like icon"/> Follow
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{marginTop: "-10px"}} className="ui divider"/>
+                </Row>
+                <Row>
+                  <div className="ui comments" style={{overflowY: "scroll", marginLeft: "-5px", height: "390px", overflowX: "hidden"}}>
+                    {comments}
+                  </div>
+                </Row>
+                <Row>
+                  <form className="ui reply form" >
+                    <div className="ui divider"/>
+                    <span>
+                      <div style={{ marginBottom: "10px" }}>
+                        {
+                          liked ?
+                            <Image src="https://img.icons8.com/color/48/000000/like--v3.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/> :
+                            <Image src="https://img.icons8.com/ios/50/000000/hearts--v1.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/>
+                        }
 
                         <Image onClick={handleShowFavorite} src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/000000/external-bookmark-interface-kiranshastry-lineal-kiranshastry.png" style={{cursor: "pointer", width: "30px"}}/>
-                    </div>
-                    <span className="ui icon input">
-                      <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>
-                      <Button variant="outline-primary" style={{marginLeft: "5%"}} onClick={handleSubmitComment}>Post</Button>
+                      </div>
+                      <span className="ui icon input">
+                        <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>
+                        <Button variant="outline-primary" style={{marginLeft: "5%"}} onClick={handleSubmitComment}>Post</Button>
+                      </span>
                     </span>
-                  </span>
-                </form>
+                  </form>
+                </Row>
               </Col>
             </Row>
           </Container>

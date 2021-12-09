@@ -74,7 +74,6 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
             email: "None",
           }
         });
-
         store.dispatch({
           type: LOAD_ALL_POST_REQUEST,
           params: {
@@ -84,7 +83,6 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
         });
       }
     }
-
     store.dispatch(END);
     await store.sagaTask.toPromise();
   }

@@ -16,12 +16,14 @@ const createSaga = (name, url, method) => {
     const eventVar = function* event(action) {
         try {
             const result = yield call(eventAPI, action);
+            console.log("urlss", name + "_SUCCESS", result)
             yield put({
                 type: name + "_SUCCESS",
                 data: result,
                 plus: action.plus
             });
         } catch (error) {
+            console.log("urlss", name + "_FAILURE", error)
             yield put ({
                 type: name + "_FAILURE",
                 error: error
@@ -32,7 +34,6 @@ const createSaga = (name, url, method) => {
     const watchVar = function* watchEvent() {
         yield takeLatest(name + "_REQUEST", eventVar);
     }
-
     return watchVar;
 }
 

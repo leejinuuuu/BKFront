@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Button, Modal, Form, InputGroup, FormControl, Badge} from "react-bootstrap";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {UPLOAD_POST_REQUEST} from "../config/event/eventName/postEvent";
@@ -33,7 +33,8 @@ const UploadPostModal = ({show, setShow}) => {
     setHashtag(hashtag.splice(index, 1))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
     let tagData = "";
     hashtag.map(v => tagData += "#" + v);
 
@@ -50,7 +51,11 @@ const UploadPostModal = ({show, setShow}) => {
 
     setHashtag([]);
     setShow(false)
-  }
+  }, [user, hashtag])
+
+  const onChange = useCallback((e) => {
+
+  }, [])
 
   return(
     <Modal show={show} onHide={handleClose}>
@@ -70,13 +75,14 @@ const UploadPostModal = ({show, setShow}) => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
               value={tagName}
+              onChange={onChange}
             />
             <Button onClick={onClickTagButton} variant="outline-secondary" id="button-addon2">
               Button
             </Button>
           </InputGroup>
           <div>
-            {hashtag.map(v => <span><Badge id={v} onClick={onClickTagBadge} bg="primary" style={{cursor: "pointer"}}>{v}</Badge>{' '}</span>)}
+            {hashtag.map(v => <span key={v}><Badge id={v} onClick={onClickTagBadge} bg="primary" style={{cursor: "pointer"}}>{v}</Badge>{' '}</span>)}
           </div>
           <Form.Group style={{marginTop: "20px"}} controlId="formFileMultiple" className="mb-3">
             <Form.Label>게시물 사진</Form.Label>
