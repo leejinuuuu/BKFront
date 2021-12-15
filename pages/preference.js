@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {Button, Col, Row} from "react-bootstrap";
-import SimplePostCard from "../component/SimplePostCard";
 import PreferenceCard from "../component/PreferenceCard";
 import Link from 'next/link'
 
