@@ -200,7 +200,7 @@ const PostModal = ({postInfo, show, setShow}) => {
           </Container>
         </Modal.Body>
       </Modal>
-      <FavoriteModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>
+      { user && <FavoriteModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
     </span>
   )
 }

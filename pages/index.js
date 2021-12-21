@@ -1,43 +1,57 @@
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {GET_RECOMMEND_ACCOUNT_REQUEST, LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
+import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
 import {END} from "redux-saga";
 import wrapper from "../store/store-wrapper";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
-import Router from 'next/router'
 import AppLayout from "../component/AppLayout";
-import {Col, Image, Row} from "react-bootstrap";
+import {Row} from "react-bootstrap";
 import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
 import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
-import useWindowSize from "../utils/useWindowSize";
-import {useCookies} from "react-cookie";
 import {useSession} from "next-auth/client";
 
 const home = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [cookies, setCookie] = useCookies(['user']);
   const [session, loadingSession] = useSession();
-
-  const [width, height] = useWindowSize();
+  const [width, setWidth] = useState(true);
 
   const { user, LoadingUserError} = useSelector(state => state.userReducer)
 
-  if (session) {
-    if(LoadingUserError) {
-      router.push("/signup?google="+ session.user.name)
+  const handleResize = () => {
+    console.log(width, window.innerWidth)
+    if(window.innerWidth > 1400 && !width) {
+      setWidth(true);
+    } else if(width && window.innerWidth < 1400) {
+      setWidth(false);
     }
-
-    dispatch({
-      type: LOAD_USER_REQUEST,
-      params: {
-        username: session.user.name,
-        email: session.user.email
-      }
-    })
   }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+
+    if(window.innerWidth > 1400) setWidth(true);
+    else setWidth(false)
+
+    if (session) {
+      if(LoadingUserError) {
+        router.push("/signup?google="+ session.user.name)
+      }
+
+      dispatch({
+        type: LOAD_USER_REQUEST,
+        params: {
+          username: session.user.name,
+          email: session.user.email
+        }
+      })
+    }
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [width, session])
 
   return (
     <div>
@@ -47,7 +61,7 @@ const home = () => {
         </Row>
       </AppLayout>
       {
-        width > 1400 && user !== null && user !== "" ?
+        width && user !== null && user !== "" ?
           <div style={{position: "fixed", top: "10%", left: "6%"}}>
             <div style={{marginLeft: "30px"}}>추천</div>
             <RecommendAccount accounts={user.recommends}/>
@@ -74,14 +88,15 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
             email: "None",
           }
         });
-        store.dispatch({
-          type: LOAD_ALL_POST_REQUEST,
-          params: {
-            offset: 0,
-            limit: 10
-          }
-        });
       }
+
+      store.dispatch({
+        type: LOAD_ALL_POST_REQUEST,
+        params: {
+          offset: 0,
+          limit: 10
+        }
+      });
     }
     store.dispatch(END);
     await store.sagaTask.toPromise();

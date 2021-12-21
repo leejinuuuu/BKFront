@@ -23,7 +23,6 @@ const createSaga = (name, url, method) => {
                 plus: action.plus
             });
         } catch (error) {
-            console.log("urlss", name + "_FAILURE", error)
             yield put ({
                 type: name + "_FAILURE",
                 error: error

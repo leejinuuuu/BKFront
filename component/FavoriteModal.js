@@ -144,7 +144,7 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
         {
           favoriteList.map(v => {
             return (
-              <FavoriteListCheckBox onClickCheckBox={onClickCheckBox} postId={postInfo.id} listInfo={v} posts={v.posts}/>
+              <FavoriteListCheckBox key={v.id} onClickCheckBox={onClickCheckBox} postId={postInfo.id} listInfo={v} posts={v.posts}/>
             )
           })
         }
