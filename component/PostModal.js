@@ -140,7 +140,7 @@ const PostModal = ({postInfo, show, setShow}) => {
                     transform: "translate(-50%, -50%)",
                     msTransform: "translate(-50%, -50%)"
                   }}>
-                    <Image width={"410px"} src={imageURL + postInfo.image}/>
+                    <Image width={"300px"} src={imageURL + postInfo.image}/>
                   </div>
                 </div>
               </Col>

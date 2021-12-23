@@ -17,17 +17,42 @@ const home = () => {
   const dispatch = useDispatch();
   const [session, loadingSession] = useSession();
   const [width, setWidth] = useState(true);
+  const [postOffset, setPostOffset] = useState(1);
 
   const { user, LoadingUserError} = useSelector(state => state.userReducer)
 
   const handleResize = () => {
-    console.log(width, window.innerWidth)
     if(window.innerWidth > 1400 && !width) {
       setWidth(true);
     } else if(width && window.innerWidth < 1400) {
       setWidth(false);
     }
   }
+
+  if (session && LoadingUserError) {
+    router.push("/signup?google=" + session.user.name)
+  }
+
+  const onScroll = () => {
+    let temp = window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight
+    if(temp) {
+      setPostOffset(postOffset + 1)
+      dispatch({
+        type: LOAD_ALL_POST_REQUEST,
+        params: {
+          offset: postOffset,
+          limit: 9
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [postOffset]);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
@@ -37,7 +62,7 @@ const home = () => {
 
     if (session) {
       if(LoadingUserError) {
-        router.push("/signup?google="+ session.user.name)
+        router.push("/signup?google=" + session.user.name)
       }
 
       dispatch({
@@ -94,7 +119,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
         type: LOAD_ALL_POST_REQUEST,
         params: {
           offset: 0,
-          limit: 10
+          limit: 9
         }
       });
     }

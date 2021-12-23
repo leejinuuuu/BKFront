@@ -51,7 +51,7 @@ const postReducer = (state = initialState, action) => {
       case LOAD_ALL_POST_SUCCESS:
         draft.isLoadingPost = false;
         draft.isLoadedPost = true;
-        draft.mainPost = action.data
+        draft.mainPost = [...draft.mainPost, ...action.data]
         break;
       case LOAD_ALL_POST_FAILURE:
         draft.isLoadingPost = false;
