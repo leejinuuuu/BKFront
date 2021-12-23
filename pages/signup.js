@@ -6,11 +6,15 @@ import {AUTH_WITH_EMAIL_REQUEST, SIGNUP_REQUEST} from "../config/event/eventName
 import {useRouter} from "next/router";
 import Link from 'next/link'
 import wrapper from "../store/store-wrapper";
+import {signOut, useSession} from "next-auth/client";
+import {useCookies} from "react-cookie";
 
 const signup = () => {
   const dispatch = useDispatch();
   const {isSignedUp, emailCode} = useSelector(state => state.userReducer)
   const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  const [session, loadingSession] = useSession();
 
   const [isAuthed, setIsAuthed] = useState(true);
   const [validated, setValidated] = useState(true);
@@ -103,6 +107,15 @@ const signup = () => {
     }
   }, [emailCode, code])
 
+  const onClickCancel = useCallback(e => {
+    if(session) return signOut()
+    else {
+      removeCookie("accessToken")
+      removeCookie("platform")
+    }
+    router.push("/login")
+  }, [emailCode, code])
+
   return(
     <div>
       <Row style={{marginTop: "15%"}}>
@@ -183,6 +196,11 @@ const signup = () => {
               {isAuthed ? "회원가입" : "입력창 혹은 이메일 인증을 완료해 주세요"}
             </Button>
           </Form>
+          <div style={{textAlign: "center", marginTop: "10px"}}>
+            <Button style={{width: "40%"}} variant="outline-secondary" id="button-addon2" onClick={onClickCancel}>
+              Cancel
+            </Button>
+          </div>
         </Col>
         <Col lg={"4"}/>
       </Row>
