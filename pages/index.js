@@ -64,14 +64,6 @@ const home = () => {
       if(LoadingUserError) {
         router.push("/signup?google=" + session.user.name)
       }
-
-      dispatch({
-        type: LOAD_USER_REQUEST,
-        params: {
-          username: session.user.name,
-          email: session.user.email
-        }
-      })
     }
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -105,15 +97,9 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
 
-      if(cookie.includes("accessToken")) {
-        store.dispatch({
-          type: LOAD_USER_REQUEST,
-          params: {
-            username: "None",
-            email: "None",
-          }
-        });
-      }
+      store.dispatch({
+        type: LOAD_USER_REQUEST
+      });
 
       store.dispatch({
         type: LOAD_ALL_POST_REQUEST,

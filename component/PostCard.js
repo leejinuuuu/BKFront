@@ -56,7 +56,7 @@ const PostCard = ({postInfo}) => {
 
   return(
     <div>
-      <div className="ui card" style={{ height: "30%"}}>
+      <div className="ui card" style={{width: "100%"}}>
         <Link href={
           postInfo.writerAccount === null ? "/clan/" + postInfo.writerClan.name : "/profile/" + postInfo.writerAccount.username
         }>
@@ -65,8 +65,8 @@ const PostCard = ({postInfo}) => {
             <img className="ui avatar image" src={imageURL + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
           </div>
         </Link>
-        <div className="image">
-          <img src={imageURL + postInfo.image}/>
+        <div className="image" >
+          <img style={{height: "300px", objectFit: "cover"}} src={imageURL + postInfo.image}/>
         </div>
         <div className="content">
             {

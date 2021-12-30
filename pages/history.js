@@ -38,16 +38,13 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
 
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
-
-      if(cookie.includes("accessToken")) {
-        store.dispatch({
-          type: LOAD_USER_REQUEST,
-          params: {
-            username: "None",
-            email: "None",
-          }
-        });
-      }
+      store.dispatch({
+        type: LOAD_USER_REQUEST,
+        params: {
+          username: "None",
+          email: "None",
+        }
+      });
     }
     store.dispatch(END);
     await store.sagaTask.toPromise();

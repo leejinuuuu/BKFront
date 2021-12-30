@@ -15,6 +15,7 @@ import {END} from "redux-saga";
 import ThumbnailPostCard from "../../component/ThumbnailPostCard";
 import ClanMakeModal from "../../component/ClanMakeModal";
 import JoinedClan from "../../component/JoinedClan";
+import {useSession} from "next-auth/client";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ const Profile = () => {
 
   const [show, setShow] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false)
+  const [session, loadingSession] = useSession();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -36,26 +38,26 @@ const Profile = () => {
         break;
       }
     }
-  }, [])
+  }, [session])
 
   const onClickFollow = useCallback(() => {
-    if(isFollowing) {
-      dispatch({
-        type: UNFOLLOW_ACCOUNT_REQUEST,
-        data: {
-          followerId: user.id,
-          followeeId: myProfile.id
-        }
-      })
-    } else {
-      dispatch({
-        type: FOLLOW_ACCOUNT_REQUEST,
-        data: {
-          followerId: user.id,
-          followeeId: myProfile.id
-        }
-      })
-    }
+    dispatch({
+      type: FOLLOW_ACCOUNT_REQUEST,
+      data: {
+        followerId: user.id,
+        followeeId: myProfile.id
+      }
+    })
+  }, [])
+
+  const onClickUnFollow = useCallback(() => {
+    dispatch({
+      type: UNFOLLOW_ACCOUNT_REQUEST,
+      data: {
+        followerId: user.id,
+        followeeId: myProfile.id
+      }
+    })
   }, [])
 
   return (
@@ -75,8 +77,8 @@ const Profile = () => {
               user.username === myProfile.username ?
                 <Button variant="outline-dark" onClick={handleShow}>Create Clan</Button> :
                 isFollowing ?
-                  <Button variant="outline-dark" onClick={handleShow}>unFollow</Button> :
-                  <Button variant="outline-dark" onClick={handleShow}>Follow</Button>
+                  <Button variant="outline-dark" onClick={onClickUnFollow}>unFollow</Button> :
+                  <Button variant="outline-dark" onClick={onClickFollow}>Follow</Button>
             }
           </div>
         </Col>
@@ -157,23 +159,18 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
 
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
+
+      store.dispatch({
+        type: LOAD_USER_REQUEST
+      });
+
+      store.dispatch({
+        type: LOAD_MY_PROFILE_REQUEST,
+        params: {
+          username: pid
+        }
+      });
     }
-
-    store.dispatch({
-      type: LOAD_USER_REQUEST,
-      params: {
-        username: "None",
-        email: "None",
-      }
-    });
-
-    store.dispatch({
-      type: LOAD_MY_PROFILE_REQUEST,
-      params: {
-        username: pid
-      }
-    });
-
 
     store.dispatch(END);
     await store.sagaTask.toPromise();

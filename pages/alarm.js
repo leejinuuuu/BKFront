@@ -1,14 +1,16 @@
-import React, {useState} from 'react'
+import React, {useEffect} from 'react'
 import AppLayout from "../component/AppLayout";
 import wrapper from "../store/store-wrapper";
 import axios from "axios";
 import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
-import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {END} from "redux-saga";
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {Badge, Button, ListGroup} from "react-bootstrap";
+import {useSession} from "next-auth/client";
 
 const alarm = () => {
+  const dispatch = useDispatch();
+
   const { user } = useSelector(state => state.userReducer)
 
   return(
@@ -39,16 +41,9 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
 
     if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
-
-      if(cookie.includes("accessToken")) {
-        store.dispatch({
-          type: LOAD_USER_REQUEST,
-          params: {
-            username: "None",
-            email: "None",
-          }
-        });
-      }
+      store.dispatch({
+        type: LOAD_USER_REQUEST,
+      });
     }
     store.dispatch(END);
     await store.sagaTask.toPromise();

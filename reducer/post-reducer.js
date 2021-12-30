@@ -43,7 +43,7 @@ const postReducer = (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
       case UPLOAD_POST_SUCCESS:
-        draft.mainPost.push(action.data)
+        draft.mainPost = [action.data, ...draft.mainPost]
         break;
       case LOAD_ALL_POST_REQUEST:
         draft.isLoadingPost = true;

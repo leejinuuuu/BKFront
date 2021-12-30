@@ -30,7 +30,7 @@ const AppLayout = ({ children }) => {
 
   return (
     <div>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="light" expand="lg" style={{position: "fixed", width: "100%", zIndex: 100}}>
         <Container>
           {isLoggedIn ?
             <Dropdown as={ButtonGroup}>

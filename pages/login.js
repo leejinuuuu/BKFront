@@ -20,11 +20,13 @@ const login = () => {
     alert("LogIn SUCCEED!!!")
     setCookie("accessToken", user.accessToken, {path: "/"})
     setCookie("platform", user.platform, {path: "/"})
+    setCookie("SUID", user.username, {path: "/"})
     router.push("/")
   }
 
   if(session) {
     router.push("/")
+    setCookie("SUID", session.user.name, {path: "/"})
   }
 
   const handleSubmit = useCallback(e => {
@@ -38,12 +40,6 @@ const login = () => {
       data
     })
 
-  }, [])
-
-  useEffect(() => {
-    return () => {
-
-    }
   }, [])
 
   return (
