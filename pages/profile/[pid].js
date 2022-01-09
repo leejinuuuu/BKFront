@@ -16,6 +16,8 @@ import ThumbnailPostCard from "../../component/ThumbnailPostCard";
 import ClanMakeModal from "../../component/ClanMakeModal";
 import JoinedClan from "../../component/JoinedClan";
 import {useSession} from "next-auth/client";
+import {imageURL} from "../../config/config";
+import {object} from "prop-types";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -66,10 +68,10 @@ const Profile = () => {
       <Row style={{marginTop: "-4%"}}>
         <Col>
           <div style={{maxHeight: "45%", maxWidth: "100%", overflow: "hidden"}}>
-            <Image width="100%" src={"https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"}/>
+            <Image style={{objectFit: "cover"}} width="100%" src={imageURL + myProfile.backgroundImage}/>
           </div>
           <div style={{textAlign: "center"}}>
-            <Image style={{marginTop: "-150px"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
+            <Image style={{marginTop: "-150px", height: "200px", objectFit: "cover"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
             <h2>{myProfile.username}</h2>
           </div>
           <div style={{textAlign: "center", margin: "30px"}}>
@@ -83,7 +85,7 @@ const Profile = () => {
           </div>
         </Col>
       </Row>
-      <Row style={{marginLeft: "10px", marginTop: "-30%"}}>
+      <Row style={{marginLeft: "10px", marginTop: "-27%"}}>
         <Col lg={5}>
           <h3 className="ui header">Follwer / Following</h3>
           <div>
@@ -115,7 +117,7 @@ const Profile = () => {
           </div>
         </Col>
         <Col lg={7}>
-          <Row style={{marginTop: "5%"}}>
+          <Row style={{marginTop: "3%"}}>
             <Col>
               <Row>
                 <Accordion defaultActiveKey="0">
@@ -177,4 +179,4 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
   }
 );
 
-export default connect(state => state)(Profile);
+export default Profile;

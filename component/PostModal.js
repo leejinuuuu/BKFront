@@ -3,13 +3,17 @@ import {Button, Col, Container, Image, Modal, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import Comment from "./Comment";
 import {
-  ADD_COMMENT_REQUEST,
+  ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS,
   ADD_REPLY_REQUEST,
-  LIKED_POST_REQUEST,
+  LIKED_POST_REQUEST, LOAD_ALL_POST_REQUEST,
   UNLIKED_POST_REQUEST
 } from "../config/event/eventName/postEvent";
-import {imageURL} from "../config/config";
+import {backURL, imageURL} from "../config/config";
 import FavoriteModal from "./FavoriteModal";
+import wrapper from "../store/store-wrapper";
+import axios from "axios";
+import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
+import {END} from "redux-saga";
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
@@ -24,16 +28,38 @@ const PostModal = ({postInfo, show, setShow}) => {
   const [comments, setComments] = useState([]);
 
   useEffect( () => {
-    if(typeof postInfo.comment !== 'undefined') {
+    if(typeof postInfo.comment !== 'undefined' && show) {
       const temp = [];
-      for(let i=0; i<postInfo.comment.length; i++) {
-        temp.push(
-          <Comment key={i} commentInfo={postInfo.comment[i]} replyComment={postInfo.comment[i].replyComment}/>
-        )
+
+      if(postInfo.comment.length === 0) {
+        axios
+          .get(backURL + "/comment?id=" + postInfo.id)
+          .then(res => {
+            if(res.length > 0) {
+              dispatch({
+                type: ADD_COMMENT_SUCCESS,
+                data: res,
+                plus: {
+                  postId: postInfo.id
+                }
+              })
+              for(let i=0; i<res.length; i++) {
+                temp.push(
+                  <Comment key={i} commentInfo={res[i]} replyComment={res[i].replyComment}/>
+                )
+              }
+            }
+          })
+      } else {
+        for(let i=0; i<postInfo.comment.length; i++) {
+          temp.push(
+            <Comment key={i} commentInfo={postInfo.comment[i]} replyComment={postInfo.comment[i].replyComment}/>
+          )
+        }
       }
       setComments(temp)
     }
-  }, [postInfo.comment])
+  }, [postInfo.comment, show])
 
   const [commentData, setCommentData] = useState("");
   const handleCommentChange = useCallback((e) => {

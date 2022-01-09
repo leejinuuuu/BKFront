@@ -51,4 +51,4 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
   }
 );
 
-export default connect(state => state)(history);
+export default history;

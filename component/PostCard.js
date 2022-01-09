@@ -4,6 +4,7 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {LIKED_POST_REQUEST, UNLIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {imageURL} from "../config/config";
 import Link from 'next/link'
+import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
 
 const PostCard = ({postInfo}) => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const PostCard = ({postInfo}) => {
         }>
           <div className="content">
             <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
-            <img className="ui avatar image" src={imageURL + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
+            <img style={{ objectFit: "cover" }} className="ui avatar image" src={imageURL + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
           </div>
         </Link>
         <div className="image" >

@@ -35,7 +35,7 @@ const AppLayout = ({ children }) => {
           {isLoggedIn ?
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle split variant="light" id="dropdown-custom-2">
-                <Image src={imageURL + user.profileImage} roundedCircle style={{width: "25px", marginRight: "6px"}}/>
+                <Image src={imageURL + user.profileImage} roundedCircle style={{width: "25px", height: "25px",marginRight: "6px", objectFit: "cover"}}/>
               </Dropdown.Toggle>
               <Dropdown.Menu className="super-colors">
                 <Dropdown.Item eventKey="1" href={"/profile/" + user.username}>Profile</Dropdown.Item>

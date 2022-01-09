@@ -24,7 +24,7 @@ const Comment = ({replyComment, commentInfo}) => {
     reply.push(
       <div className="comment">
         <a className="avatar">
-          <img src={imageURL + replyComment[i].writerProfileImage}/>
+          <img style={{height: "35px", objectFit: "cover"}} src={imageURL + replyComment[i].writerProfileImage}/>
         </a>
         <div className="content">
           <a className="author">{replyComment[i].writerName}</a>
@@ -43,7 +43,7 @@ const Comment = ({replyComment, commentInfo}) => {
   return(
     <div className="comment">
       <a className="avatar">
-        <img src={imageURL + commentInfo.writerProfileImage}/>
+        <img style={{height: "35px", objectFit: "cover"}} src={imageURL + commentInfo.writerProfileImage}/>
       </a>
       <div className="content">
         <a className="author">{commentInfo.writerName}</a>

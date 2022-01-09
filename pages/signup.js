@@ -48,6 +48,7 @@ const signup = () => {
       const username = e.target.querySelector("#formGridUsername").value;
       const password = e.target.querySelector("#formGridPassword").value;
       const email = email1 + email2;
+      const message = e.target.querySelector("#formGridMessage").value;
       let birthYear = e.target.querySelector("#formGridBirthYear").value;
       let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
       let birthDay = e.target.querySelector("#formGridBirthDay").value;
@@ -62,11 +63,13 @@ const signup = () => {
 
 
       const formData = new FormData();
-      formData.append("profile", e.target.querySelector("#formFileMultiple").files[0])
-      formData.append("username", username)
-      formData.append("email", email)
-      formData.append("password", password)
-      formData.append("birth", birth)
+      formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
+      formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("birth", birth);
+      formData.append("message", message);
 
       dispatch({
         type: SIGNUP_REQUEST,
@@ -118,7 +121,7 @@ const signup = () => {
 
   return(
     <div>
-      <Row style={{marginTop: "15%"}}>
+      <Row style={{marginTop: "10%"}}>
         <Col lg={"4"}/>
         <Col lg={"4"}>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -189,7 +192,23 @@ const signup = () => {
               <Form.Label>Select Profile Image</Form.Label>
               <Form.Control type="file" multiple required/>
               <Form.Control.Feedback type="invalid">
-                Please choose a profileImage.
+                프로필 사진을 입력해 주세요.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group controlId="formFileMultiple2" className="mb-3">
+              <Form.Label>Select Profile Background Image</Form.Label>
+              <Form.Control type="file" multiple required/>
+              <Form.Control.Feedback type="invalid">
+                프로필 배경사진을 입력해 주세요.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formGridMessage" >
+              <Form.Label>상태 메세지</Form.Label>
+              <Form.Control type="text" placeholder="상태메세지" required/>
+              <Form.Control.Feedback type="invalid">
+                상태메세지를 입력해 주세요.
               </Form.Control.Feedback>
             </Form.Group>
             <Button disabled={!isAuthed} type="submit" variant="outline-dark" style={{marginLeft: "26%", width: "50%"}}>
