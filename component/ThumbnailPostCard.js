@@ -15,7 +15,7 @@ const ThumbnailPostCard = ({postInfo}) => {
 
   return(
     <span>
-      <Image onClick={handleModalShow} id={postInfo.id} style={{marginRight: "1%", marginBottom: "1%", cursor: "pointer"}} thumbnail width={"125px"} src={imageURL + postInfo.image}/>
+      <Image onClick={handleModalShow} id={postInfo.id} style={{marginRight: "1%", marginBottom: "1%", cursor: "pointer", width: "130px", height: "130px", objectFit: "cover"}} thumbnail src={imageURL + postInfo.image}/>
       <PostModal show={show} setShow={setShow} postInfo={postInfo}/>
     </span>
   )

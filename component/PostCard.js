@@ -6,7 +6,7 @@ import {imageURL} from "../config/config";
 import Link from 'next/link'
 import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
 
-const PostCard = ({postInfo}) => {
+const PostCard = ({postInfo, size}) => {
   const dispatch = useDispatch();
   const {user} = useSelector(state => state.userReducer)
   const [liked, setLiked] = useState(false)
@@ -56,18 +56,18 @@ const PostCard = ({postInfo}) => {
   }, [show])
 
   return(
-    <div>
-      <div className="ui card" style={{width: "100%"}}>
+    <div style={{marginLeft: size === 0 ? "20%" : "0px"}}>
+      <div className="ui card" style={{width: size === 0 ? "80%" : "100%"}}>
         <Link href={
-          postInfo.writerAccount === null ? "/clan/" + postInfo.writerClan.name : "/profile/" + postInfo.writerAccount.username
+          postInfo.isAccountWriter ? "/profile/" + postInfo.writer.name : "/clan/" + postInfo.writer.name
         }>
           <div className="content">
             <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
-            <img style={{ objectFit: "cover" }} className="ui avatar image" src={imageURL + writer.profileImage}/>{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}
+            <img style={{ objectFit: "cover" }} className="ui avatar image" src={imageURL + postInfo.writer.profileImage}/>{postInfo.writer.name}
           </div>
         </Link>
         <div className="image" >
-          <img style={{height: "300px", objectFit: "cover"}} src={imageURL + postInfo.image}/>
+          <img style={{height: size === 0 ? "600px" : "300px", objectFit: "cover"}} src={imageURL + postInfo.image}/>
         </div>
         <div className="content">
             {

@@ -22,7 +22,7 @@ const SimplePostCard = ({postInfo}) => {
           <img id={postInfo.id} src = {imageURL + postInfo.image}/>
         </a>
         <div className="content">
-          <a id={postInfo.id} className="header" href="#">{postInfo.writerAccount === null ? postInfo.writerClan.master : postInfo.writerAccount.username}</a>
+          <a id={postInfo.id} className="header" href="#">{postInfo.writer.name}</a>
         </div>
       </div>
       <PostModal setShow={setShow} show={show} postInfo={postInfo}/>

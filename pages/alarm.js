@@ -23,7 +23,7 @@ const alarm = () => {
         <ListGroup style={{marginTop: "2%"}}>
           {user.alarm.map(v => {
             return (
-              <ListGroup.Item>{v}</ListGroup.Item>
+              <ListGroup.Item>{v.content + "/" + v.createdAt}</ListGroup.Item>
             )
           })}
         </ListGroup>

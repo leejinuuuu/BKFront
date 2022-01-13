@@ -6,7 +6,7 @@ import {
   LIKED_POST_SUCCESS,
   LOAD_ALL_POST_FAILURE,
   LOAD_ALL_POST_REQUEST,
-  LOAD_ALL_POST_SUCCESS, PICK_COMMENT_TO_REPLY,
+  LOAD_ALL_POST_SUCCESS, PICK_COMMENT_TO_REPLY, SORT_POSTS,
   UNLIKED_POST_FAILURE,
   UNLIKED_POST_REQUEST,
   UNLIKED_POST_SUCCESS, UPLOAD_CLAN_POST_SUCCESS,
@@ -137,6 +137,22 @@ const postReducer = (state = initialState, action) => {
         draft.isAddingReply = false;
         draft.AddReplyError = "ERROR"
         break;
+      case SORT_POSTS:
+        if(action.data.order === 0) {
+          draft.mainPost.sort((a, b) => {
+            if(a.createdAt < b.createdAt) return 1;
+            else if(a.createdAt > b.createdAt) return -1;
+            else return 0;
+          })
+        } else if(action.data.order === 1) {
+          draft.mainPost.sort((a, b) => {
+            return b.likerAccount.length - a.likerAccount.length
+          })
+        } else {
+          draft.mainPost.sort((a, b) => {
+            return b.comment.length - a.comment.length
+          })
+        }
       default:
         break;
     }

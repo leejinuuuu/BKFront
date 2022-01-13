@@ -73,10 +73,11 @@ const home = () => {
   return (
     <div>
       <AppLayout>
-        <Row style={{marginTop: "5%"}}>
+        <Row style={{marginTop: "2%"}}>
           <Post/>
         </Row>
       </AppLayout>
+
       {
         width && user !== null && user !== "" ?
           <div style={{position: "fixed", top: "10%", left: "6%"}}>

@@ -175,12 +175,12 @@ const PostModal = ({postInfo, show, setShow}) => {
                   <div className="ui large feed">
                     <div className="event">
                       <div className="label">
-                        <img style={{marginTop: "10px"}} src="https://yt3.ggpht.com/ytc/AKedOLTQqgurRSivjU2ahR6UCt_vLqRN0r-RaGQ7G_uNMw=s900-c-k-c0x00ffffff-no-rj"/>
+                        <img style={{marginTop: "10px"}} src={imageURL + postInfo.writer.profileImage}/>
                       </div>
                       <div className="content">
                         <div className="summary">
                           <a className="user">
-                            {postInfo.writerAccount.username}
+                            {postInfo.writer.name}
                           </a> {"- " + postInfo.title}
                           <div className="date">
                             {postInfo.createdAt.substring(0, 10)}

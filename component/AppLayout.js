@@ -81,9 +81,8 @@ const AppLayout = ({ children }) => {
       <Row style={{width: "100%"}}>
         <Col lg={"2"} xxl={"3"}/>
         <Col lg={"8"} xxl={"6"}>
-          <Row>
-          </Row>
-          <Row>
+          <Row/>
+          <Row style={{marginTop: "50px"}}>
             {children}
           </Row>
           <div style={{position: "fixed", bottom: "10%", right: "22%"}}>

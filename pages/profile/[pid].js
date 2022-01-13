@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Accordion, Button,  Col, Image, Row} from "react-bootstrap";
+import {Accordion, Button, Col, Image, Row, Tab, Tabs} from "react-bootstrap";
 import AppLayout from "../../component/AppLayout";
 import FollowAccount from "../../component/FollowAccount";
 import {connect, useDispatch, useSelector} from "react-redux";
@@ -65,16 +65,17 @@ const Profile = () => {
   return (
     <>
       <AppLayout/>
-      <Row style={{marginTop: "-4%"}}>
+      <Row>
         <Col>
-          <div style={{maxHeight: "45%", maxWidth: "100%", overflow: "hidden"}}>
-            <Image style={{objectFit: "cover"}} width="100%" src={imageURL + myProfile.backgroundImage}/>
+          <div style={{overflow: "hidden"}}>
+            <Image style={{height: "500px", objectFit: "cover"}} width="100%" src={imageURL + myProfile.backgroundImage}/>
           </div>
           <div style={{textAlign: "center"}}>
             <Image style={{marginTop: "-150px", height: "200px", objectFit: "cover"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
             <h2>{myProfile.username}</h2>
+            <p>{myProfile.message}</p>
           </div>
-          <div style={{textAlign: "center", margin: "30px"}}>
+          <div style={{textAlign: "center", margin: "20px"}}>
             {
               user.username === myProfile.username ?
                 <Button variant="outline-dark" onClick={handleShow}>Create Clan</Button> :
@@ -85,7 +86,7 @@ const Profile = () => {
           </div>
         </Col>
       </Row>
-      <Row style={{marginLeft: "10px", marginTop: "-27%"}}>
+      <Row style={{marginLeft: "10px"}}>
         <Col lg={5}>
           <h3 className="ui header">Follwer / Following</h3>
           <div>
@@ -117,27 +118,15 @@ const Profile = () => {
           </div>
         </Col>
         <Col lg={7}>
-          <Row style={{marginTop: "3%"}}>
-            <Col>
-              <Row>
-                <Accordion defaultActiveKey="0">
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header><h3 className="ui header">내가 쓴 글</h3></Accordion.Header>
-                    <Accordion.Body style={{padding: "2%"}}>
-                      {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard postInfo={v}/>)}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                  <Accordion.Item eventKey="1">
-                    <Accordion.Header><h3 className="ui header">그룹이 쓴 글</h3></Accordion.Header>
-                    <Accordion.Body>
-                      <div style={{padding: "2%"}}>
-                        {myProfile.writePostAsClan.map(v => <ThumbnailPostCard postInfo={v}/>)}
-                      </div>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              </Row>
-            </Col>
+          <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
+            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+              <Tab eventKey="home" title="내가 쓴 글">
+                {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard postInfo={v}/>)}
+              </Tab>
+              <Tab eventKey="profile" title="그룹이 쓴 글">
+                {myProfile.writePostAsClan.map(v => <ThumbnailPostCard postInfo={v}/>)}
+              </Tab>
+            </Tabs>
           </Row>
 
           <Row>
