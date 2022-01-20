@@ -10,20 +10,6 @@ import {SSRProvider} from "react-bootstrap";
 import {CookiesProvider} from "react-cookie";
 import { Provider } from "next-auth/client"
 
-function str_obj(str) {
-  let result = {};
-  if(str) {
-    str = str.split('; ');
-    for (let i = 0; i < str.length; i++) {
-      let cur = str[i].split('=');
-      result[cur[0]] = cur[1];
-    }
-    return result;
-  } else {
-    return "";
-  }
-}
-
 class MyApp extends App {
   static getInitialProps = wrapper.getInitialAppProps(store => async ({Component, ctx}) => {
 

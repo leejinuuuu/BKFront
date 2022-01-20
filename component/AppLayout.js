@@ -44,10 +44,11 @@ const AppLayout = ({ children }) => {
                 <Dropdown.Item eventKey="4"
                                onClick={
                                  () => {
-                                   if(session) return signOut()
+                                   if(session) return signOut();
                                    else {
-                                     removeCookie("accessToken")
-                                     removeCookie("platform")
+                                     setCookie("accessToken", "");
+                                     setCookie("platform", "");
+                                     setCookie("SUID", "");
                                    }
                                  }
                                } href={"/"}>

@@ -216,7 +216,7 @@ const PostModal = ({postInfo, show, setShow}) => {
                       </div>
                       <span className="ui icon input">
                         <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>
-                        <Button variant="outline-primary" style={{marginLeft: "5%"}} onClick={handleSubmitComment}>Post</Button>
+                        <Button variant="outline-primary" style={{marginLeft: "5%"}} onClick={handleSubmitComment} disabled={!commentData}>Post</Button>
                       </span>
                     </span>
                   </form>
