@@ -239,7 +239,6 @@ const signup = () => {
         </Modal.Body>
       </Modal>
     </div>
-
   )
 }
 export default signup;
