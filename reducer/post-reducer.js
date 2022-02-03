@@ -6,10 +6,10 @@ import {
   LIKED_POST_SUCCESS,
   LOAD_ALL_POST_FAILURE,
   LOAD_ALL_POST_REQUEST,
-  LOAD_ALL_POST_SUCCESS, PICK_COMMENT_TO_REPLY, SORT_POSTS,
+  LOAD_ALL_POST_SUCCESS, LOAD_FULL_POST_SUCCESS, PICK_COMMENT_TO_REPLY, SORT_POSTS,
   UNLIKED_POST_FAILURE,
   UNLIKED_POST_REQUEST,
-  UNLIKED_POST_SUCCESS, UPLOAD_CLAN_POST_SUCCESS,
+  UNLIKED_POST_SUCCESS,
   UPLOAD_POST_SUCCESS
 } from "../config/event/eventName/postEvent";
 
@@ -37,6 +37,8 @@ const initialState = {
   isAddingReply: false,
   isAddedReply: false,
   AddReplyError: "",
+
+  postInfo: {}
 }
 
 const postReducer = (state = initialState, action) => {
@@ -153,6 +155,10 @@ const postReducer = (state = initialState, action) => {
             return b.comment.length - a.comment.length
           })
         }
+        break;
+      case LOAD_FULL_POST_SUCCESS:
+        draft.postInfo = action.data
+        break;
       default:
         break;
     }

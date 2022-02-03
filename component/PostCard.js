@@ -12,8 +12,6 @@ const PostCard = ({postInfo, size}) => {
   const [liked, setLiked] = useState(false)
   const [show, setShow] = useState(false)
 
-  const writer = postInfo.writerAccount === null ? postInfo.writerClan : postInfo.writerAccount
-
   useEffect(() => {
     setLiked(false)
     postInfo.likerAccount.map(v => {
@@ -85,12 +83,6 @@ const PostCard = ({postInfo, size}) => {
             <i id={postInfo.id} className="comment icon"/>
             {" comments"}
           </span>
-        </div>
-        <div className="extra content">
-          <div className="ui large transparent left icon input">
-            <i className="heart outline icon"/>
-            <input type="text" placeholder="Add Comment..."/>
-          </div>
         </div>
       </div>
       <PostModal show={show} setShow={setShow} postInfo={postInfo}/>

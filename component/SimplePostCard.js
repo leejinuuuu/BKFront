@@ -4,6 +4,7 @@ import {useDispatch} from "react-redux";
 import {SHOW_MODAL} from "../config/event/eventName/modal";
 import {LOAD_POST_WITH_REQUEST} from "../config/event/eventName/postEvent";
 import {imageURL} from "../config/config";
+import {Image} from "react-bootstrap";
 
 const SimplePostCard = ({postInfo}) => {
 
@@ -17,14 +18,7 @@ const SimplePostCard = ({postInfo}) => {
 
   return(
     <div>
-      <div onClick={handleModalShow} className="ui card"  style={{width: "100%"}}>
-        <a className="image" href="#">
-          <img id={postInfo.id} src = {imageURL + postInfo.image}/>
-        </a>
-        <div className="content">
-          <a id={postInfo.id} className="header" href="#">{postInfo.writer.name}</a>
-        </div>
-      </div>
+      <Image onClick={handleModalShow} style={{width: "100%", height: "100%", objectFit: "fill", cursor: "pointer"}} id={postInfo.id} src = {imageURL + postInfo.image}/>
       <PostModal setShow={setShow} show={show} postInfo={postInfo}/>
     </div>
   )

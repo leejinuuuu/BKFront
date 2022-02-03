@@ -10,10 +10,7 @@ import {
 } from "../config/event/eventName/postEvent";
 import {backURL, imageURL} from "../config/config";
 import FavoriteModal from "./FavoriteModal";
-import wrapper from "../store/store-wrapper";
 import axios from "axios";
-import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
-import {END} from "redux-saga";
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
@@ -186,11 +183,11 @@ const PostModal = ({postInfo, show, setShow}) => {
                             {postInfo.createdAt.substring(0, 10)}
                           </div>
                         </div>
-                        <div className="meta">
-                          <a className="like">
-                            <i className="like icon"/> Follow
-                          </a>
-                        </div>
+                        {/*<div className="meta">*/}
+                        {/*  <a className="like">*/}
+                        {/*    <i className="like icon"/> Follow*/}
+                        {/*  </a>*/}
+                        {/*</div>*/}
                       </div>
                     </div>
                   </div>

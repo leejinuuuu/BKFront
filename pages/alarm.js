@@ -7,6 +7,7 @@ import {END} from "redux-saga";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {Badge, Button, ListGroup} from "react-bootstrap";
 import {useSession} from "next-auth/client";
+import Link from 'next/link'
 
 const alarm = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ const alarm = () => {
         <ListGroup style={{marginTop: "2%"}}>
           {user.alarm.map(v => {
             return (
-              <ListGroup.Item>{v.content + "/" + v.createdAt}</ListGroup.Item>
+              <Link href={"/post/" + v.postId}>
+                <ListGroup.Item style={{cursor: "pointer"}}>{v.content + "/" + v.createdAt}</ListGroup.Item>
+              </Link>
             )
           })}
         </ListGroup>

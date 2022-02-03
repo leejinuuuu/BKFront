@@ -10,9 +10,8 @@ import {
 import FavoriteListCheckBox from "./FavoriteListCheckBox";
 
 const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
-  const dispatch = useDispatch();
-
   const {user} = useSelector(state => state.userReducer)
+  const dispatch = useDispatch();
 
   const [showInput, setShowInput] = useState(false);
   const [listName, setListName] = useState("");
@@ -75,13 +74,26 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
   }
 
   const onClickCreateList = () => {
-    dispatch({
-      type: CREATE_FAVORITE_LIST_REQUEST,
-      data: {
-        ownerId: user.id,
-        favoriteTitle: listName
+    let flag = false;
+
+    for(let i=0; i<favoriteList.length; i++) {
+      if(favoriteList[i].name === listName) {
+        flag = true;
       }
-    })
+    }
+
+    if(flag) {
+      alert("이름이 중복됩니다.")
+    } else {
+      dispatch({
+        type: CREATE_FAVORITE_LIST_REQUEST,
+        data: {
+          ownerId: user.id,
+          favoriteTitle: listName
+        }
+      })
+    }
+
     setShowInput(false);
   }
 

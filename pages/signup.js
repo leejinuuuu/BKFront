@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
 import {Button, Col,  Form, FormControl, InputGroup, Row, Dropdown, Modal} from 'react-bootstrap'
-import {connect, useDispatch, useSelector} from "react-redux";
-import {AUTH_WITH_EMAIL_REQUEST, CHECK_USERNAME_REQUEST, SIGNUP_REQUEST} from "../config/event/eventName/userEvent";
+import {useDispatch, useSelector} from "react-redux";
+import {SIGNUP_REQUEST} from "../config/event/eventName/userEvent";
 import {useRouter} from "next/router";
-import Link from 'next/link'
-import wrapper from "../store/store-wrapper";
 import {signOut, useSession} from "next-auth/client";
 import {useCookies} from "react-cookie";
 import axios from "axios";
@@ -31,15 +29,22 @@ const signup = () => {
   const handleClose = () => setShow(false);
 
   useEffect(() => {
+    if(router.query.google) {
+      setUsernameChecked(true)
+    } else if(isSignedUp && !usernameChecked) {
+      alert("아이디를 확인해 주세요!!!!")
+    }
+
     if(isSignedUp && usernameChecked) {
       alert("SignUp SUCCESSED!!!")
       router.push("/login")
+    } else {
+      console.log(isSignedUp)
+      console.log(usernameChecked)
     }
 
-    if(isSignedUp && !usernameChecked) {
-      alert("아이디를 확인해 주세요!!!!")
-    }
-  }, [isSignedUp, usernameChecked])
+
+  }, [isSignedUp, usernameChecked, router.query.google])
 
   useEffect(() => {
     if(router.query !== null) {
@@ -55,7 +60,6 @@ const signup = () => {
     e.stopPropagation();
     if(form.checkValidity() === true) {
       const password = e.target.querySelector("#formGridPassword").value;
-      const email = email1 + email2;
       const message = e.target.querySelector("#formGridMessage").value;
       let birthYear = e.target.querySelector("#formGridBirthYear").value;
       let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
@@ -69,12 +73,10 @@ const signup = () => {
         birthMonth.substring(0, birthMonth.length-1) + "-" +
         birthDay.substring(0, birthDay.length-1);
 
-
       const formData = new FormData();
       formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
       formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-      formData.append("username", username);
-      formData.append("email", email);
+      formData.append("username", defaultName ? defaultName : username);
       formData.append("password", password);
       formData.append("birth", birth);
       formData.append("message", message);
@@ -85,7 +87,7 @@ const signup = () => {
       })
     }
     setValidated(true);
-  }, [username])
+  }, [username, defaultName])
 
   const onChangeCode = useCallback(e => {
     setCode(e.target.value)

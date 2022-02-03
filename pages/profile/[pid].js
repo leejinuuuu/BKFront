@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Accordion, Button, Col, Image, Row, Tab, Tabs} from "react-bootstrap";
+import {Accordion, Button, Col, Image, ListGroup, Row, Tab, Tabs} from "react-bootstrap";
 import AppLayout from "../../component/AppLayout";
 import FollowAccount from "../../component/FollowAccount";
 import {connect, useDispatch, useSelector} from "react-redux";
@@ -18,18 +18,33 @@ import JoinedClan from "../../component/JoinedClan";
 import {useSession} from "next-auth/client";
 import {imageURL} from "../../config/config";
 import {object} from "prop-types";
+import FavoriteModal from "../../component/FavoriteModal";
+import FavoriteListModal from "../../component/FavoriteListModal";
 
 const Profile = () => {
   const dispatch = useDispatch()
 
   const { user, myProfile } = useSelector(state => state.userReducer)
 
-  const [show, setShow] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false)
   const [session, loadingSession] = useSession();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showCreateClan, setShowCreateClan] = useState(false);
+  const handleShowCreateClan = () => setShowCreateClan(true);
+
+  const [showFavorites, setShowFavorites] = useState(Array(user.favorites.length).fill(false))
+  const handleShowFavorites = (index) => () => {
+    let temp = [...showFavorites]
+    temp[index] = true
+    console.log(temp)
+    setShowFavorites(temp)
+  }
+  const handleCloseFavorites = (index) => () => {
+    let temp = [...showFavorites]
+    temp[index] = false
+    console.log(temp)
+    setShowFavorites(temp)
+  }
 
   useEffect(() => {
     const followers = user.followers;
@@ -61,7 +76,6 @@ const Profile = () => {
       }
     })
   }, [])
-
   return (
     <>
       <AppLayout/>
@@ -78,7 +92,7 @@ const Profile = () => {
           <div style={{textAlign: "center", margin: "20px"}}>
             {
               user.username === myProfile.username ?
-                <Button variant="outline-dark" onClick={handleShow}>Create Clan</Button> :
+                <Button variant="outline-dark" onClick={handleShowCreateClan}>Create Clan</Button> :
                 isFollowing ?
                   <Button variant="outline-dark" onClick={onClickUnFollow}>unFollow</Button> :
                   <Button variant="outline-dark" onClick={onClickFollow}>Follow</Button>
@@ -128,14 +142,25 @@ const Profile = () => {
               </Tab>
             </Tabs>
           </Row>
-
-          <Row>
-            <Col>
-            </Col>
+          <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
+            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+              <Tab eventKey="home" title="저장한 그림">
+              </Tab>
+            </Tabs>
+            <ListGroup>
+              {
+                user.favorites.map((v, i) => (
+                  <ListGroup.Item onClick={handleShowFavorites(i)}>
+                    <div>{v.name}</div>
+                  </ListGroup.Item>
+                ))
+              }
+            </ListGroup>
           </Row>
         </Col>
       </Row>
-      <ClanMakeModal show={show} setShow={setShow} />
+      <ClanMakeModal show={showCreateClan} setShow={setShowCreateClan} />
+      { user.favorites.map((v, i) => <FavoriteListModal show={showFavorites[i]} setClose={handleCloseFavorites(i)} favoriteInfo={v}/>)}
     </>
   )
 }

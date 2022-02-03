@@ -1,12 +1,12 @@
-import React, {useState} from 'react'
+import React from 'react'
 import AppLayout from "../component/AppLayout";
 import wrapper from "../store/store-wrapper";
 import axios from "axios";
 import {LOAD_USER_REQUEST} from "../config/event/eventName/userEvent";
-import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {END} from "redux-saga";
-import {connect, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {Badge, Button, ListGroup} from "react-bootstrap";
+import Link from 'next/link'
 
 const history = () => {
   const { user } = useSelector(state => state.userReducer)
@@ -21,7 +21,10 @@ const history = () => {
         <ListGroup style={{marginTop: "2%"}}>
           {user.history.map(v => {
             return (
-              <ListGroup.Item>{v.content + "/" + v.createdAt}</ListGroup.Item>
+              <Link href={"/post/" + v.postId}>
+                <ListGroup.Item style={{cursor: "pointer"}}>{v.content + "/" + v.createdAt}</ListGroup.Item>
+              </Link>
+
             )
           })}
         </ListGroup>

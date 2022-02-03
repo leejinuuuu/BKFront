@@ -14,6 +14,8 @@ const watchAddComment = createSaga("ADD_COMMENT", backURL + "/post/comment", "po
 
 const watchAddReply = createSaga("ADD_REPLY", backURL + "/post/comment/reply", "post");
 
+const watchGetFullPost = createSaga("LOAD_FULL_POST", backURL + "/post", "get")
+
 export default function* postSaga() {
   yield all([
     fork(watchGetPost),
@@ -21,6 +23,7 @@ export default function* postSaga() {
     fork(watchLikedPost),
     fork(watchUnLikedPost),
     fork(watchAddComment),
-    fork(watchAddReply)
+    fork(watchAddReply),
+    fork(watchGetFullPost)
   ]);
 }
