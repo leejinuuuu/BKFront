@@ -31,7 +31,6 @@ const alarm = () => {
           })}
         </ListGroup>
       </div>
-
     </AppLayout>
   )
 }
