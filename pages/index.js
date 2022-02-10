@@ -11,6 +11,7 @@ import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
 import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {useSession} from "next-auth/client";
+import SimpleSlider from "../component/SimpleSlider";
 
 const home = () => {
   const router = useRouter();

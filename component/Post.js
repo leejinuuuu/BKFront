@@ -4,6 +4,7 @@ import PostCard from "./PostCard";
 import SimplePostCard from "./SimplePostCard";
 import {useDispatch, useSelector} from "react-redux";
 import {SORT_POSTS} from "../config/event/eventName/postEvent";
+import SimpleSlider from "./SimpleSlider";
 
 const Post = (show, setShow) => {
   const dispatch = useDispatch();
@@ -141,6 +142,8 @@ const Post = (show, setShow) => {
         <Dropdown.Item onClick={onClickLikeNumSort}>좋아요</Dropdown.Item>
         <Dropdown.Item onClick={onClickCommentNumSort}>댓글</Dropdown.Item>
       </DropdownButton>
+
+      <SimpleSlider/>
 
       <div style={{marginTop: "2%"}}>
         {posts}
