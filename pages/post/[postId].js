@@ -10,7 +10,7 @@ import {
 } from "../../config/event/eventName/postEvent";
 import Comment from "../../component/Comment";
 import {Button, Col, Container, Image, Modal, Row} from "react-bootstrap";
-import FavoriteModal from "../../component/FavoriteModal";
+import AlbumModal from "../../component/AlbumModal";
 import wrapper from "../../store/store-wrapper";
 import {LOAD_MY_PROFILE_REQUEST, LOAD_USER_REQUEST} from "../../config/event/eventName/userEvent";
 import {END} from "redux-saga";
@@ -211,7 +211,7 @@ const Post = () => {
           </Row>
         </Col>
       </Row>
-      { user && <FavoriteModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
+      { user && <AlbumModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
     </AppLayout>
   )
 }

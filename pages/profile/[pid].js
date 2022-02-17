@@ -18,8 +18,9 @@ import JoinedClan from "../../component/JoinedClan";
 import {useSession} from "next-auth/client";
 import {imageURL} from "../../config/config";
 import {object} from "prop-types";
-import FavoriteModal from "../../component/FavoriteModal";
-import FavoriteListModal from "../../component/FavoriteListModal";
+import AlbumModal from "../../component/AlbumModal";
+import FavoriteListModal from "../../component/AlbumPostModal";
+import AlbumPostModal from "../../component/AlbumPostModal";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -32,18 +33,16 @@ const Profile = () => {
   const [showCreateClan, setShowCreateClan] = useState(false);
   const handleShowCreateClan = () => setShowCreateClan(true);
 
-  const [showFavorites, setShowFavorites] = useState(Array(user.favorites.length).fill(false))
-  const handleShowFavorites = (index) => () => {
-    let temp = [...showFavorites]
+  const [showAlbums, setShowAlbums] = useState(Array(user.albums.length).fill(false))
+  const handleShowAlbums = (index) => () => {
+    let temp = [...showAlbums]
     temp[index] = true
-    console.log(temp)
-    setShowFavorites(temp)
+    setShowAlbums(temp)
   }
-  const handleCloseFavorites = (index) => () => {
-    let temp = [...showFavorites]
+  const handleCloseAlbums = (index) => () => {
+    let temp = [...showAlbums]
     temp[index] = false
-    console.log(temp)
-    setShowFavorites(temp)
+    setShowAlbums(temp)
   }
 
   useEffect(() => {
@@ -144,23 +143,26 @@ const Profile = () => {
           </Row>
           <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
             <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
-              <Tab eventKey="home" title="저장한 그림">
+              <Tab eventKey="album" title="앨범">
+                <ListGroup>
+                  {
+                    myProfile.albums.map((v, i) => (
+                      <ListGroup.Item onClick={handleShowAlbums(i)}>
+                        <div>{v.name}</div>
+                      </ListGroup.Item>
+                    ))
+                  }
+                </ListGroup>
+              </Tab>
+              <Tab eventKey="likedPost" title="앨범">
+                <div>asdfasdf</div>
               </Tab>
             </Tabs>
-            <ListGroup>
-              {
-                user.favorites.map((v, i) => (
-                  <ListGroup.Item onClick={handleShowFavorites(i)}>
-                    <div>{v.name}</div>
-                  </ListGroup.Item>
-                ))
-              }
-            </ListGroup>
           </Row>
         </Col>
       </Row>
       <ClanMakeModal show={showCreateClan} setShow={setShowCreateClan} />
-      { user.favorites.map((v, i) => <FavoriteListModal show={showFavorites[i]} setClose={handleCloseFavorites(i)} favoriteInfo={v}/>)}
+      { myProfile.albums.map((v, i) => <AlbumPostModal show={showAlbums[i]} setClose={handleCloseAlbums(i)} albumInfo={v}/>)}
     </>
   )
 }

@@ -9,7 +9,7 @@ import {
   UNLIKED_POST_REQUEST
 } from "../config/event/eventName/postEvent";
 import {backURL, imageURL} from "../config/config";
-import FavoriteModal from "./FavoriteModal";
+import AlbumModal from "./AlbumModal";
 import axios from "axios";
 
 const PostModal = ({postInfo, show, setShow}) => {
@@ -223,7 +223,7 @@ const PostModal = ({postInfo, show, setShow}) => {
           </Container>
         </Modal.Body>
       </Modal>
-      { user && <FavoriteModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
+      { user && <AlbumModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.albums} postInfo={postInfo}/>}
     </span>
   )
 }

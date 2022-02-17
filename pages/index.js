@@ -9,7 +9,7 @@ import AppLayout from "../component/AppLayout";
 import {Row} from "react-bootstrap";
 import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
-import {LOAD_ALL_POST_REQUEST} from "../config/event/eventName/postEvent";
+import {LOAD_ALL_POST_REQUEST, LOAD_TOP20_LIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {useSession} from "next-auth/client";
 import SimpleSlider from "../component/SimpleSlider";
 
@@ -96,20 +96,26 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
 
-    if (req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-
-      store.dispatch({
-        type: LOAD_USER_REQUEST
-      });
+    if (req) {
+      if(cookie) {
+        axios.defaults.headers.Cookie = cookie;
+        store.dispatch({
+          type: LOAD_USER_REQUEST
+        });
+      }
 
       store.dispatch({
         type: LOAD_ALL_POST_REQUEST,
         params: {
           offset: 0,
-          limit: 9
+          limit: 9,
+          type: "image"
         }
       });
+
+      store.dispatch({
+        type: LOAD_TOP20_LIKED_POST_REQUEST
+      })
     }
     store.dispatch(END);
     await store.sagaTask.toPromise();

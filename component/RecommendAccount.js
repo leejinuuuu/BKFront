@@ -53,7 +53,7 @@ const RecommendAccount = ({ accounts }) => {
             <div className="item">
               <Link href={"/profile/" + v.username}>
                 <div className="ui small image" style={{cursor: "pointer"}}>
-                  <Image style={{width: "40px"}} src={imageURL + v.profileImage} roundedCircle />
+                  <Image style={{width: "40px", height: "40px", objectFit: "cover"}} src={imageURL + v.profileImage} roundedCircle />
                 </div>
               </Link>
               <div className="content" style={{marginLeft: "-120px", paddingTop: "2px"}}>

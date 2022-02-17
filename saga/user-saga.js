@@ -31,11 +31,11 @@ const watchSubscribeClan = createSaga("SUBSCRIBE_CLAN", backURL + "/clan/subscri
 
 const watchUnSubscribeClan = createSaga("UNSUBSCRIBE_CLAN", backURL + "/clan/unsubscribe", "post")
 
-const watchCreateFavorite = createSaga("CREATE_FAVORITE_LIST", backURL + "/favorite/create", "post")
+const watchCreateFavorite = createSaga("CREATE_FAVORITE_LIST", backURL + "/album/create", "post")
 
-const watchAddFavoritePost = createSaga("ADD_TO_FAVORITE_LIST", backURL + "/favorite/add", "post")
+const watchAddFavoritePost = createSaga("ADD_TO_FAVORITE_LIST", backURL + "/album/add", "post")
 
-const watchRemoveFavoritePost = createSaga("REMOVE_TO_FAVORITE_LIST", backURL + "/favorite/remove", "post")
+const watchRemoveFavoritePost = createSaga("REMOVE_TO_FAVORITE_LIST", backURL + "/album/remove", "post")
 
 export default function* userSaga() {
   yield all([

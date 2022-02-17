@@ -40,9 +40,11 @@ const UploadPostModal = ({show, setShow}) => {
 
     const formData = new FormData();
     formData.append("File", e.target.querySelector("#formFileMultiple").files[0]);
+    formData.append("Pny", e.target.querySelector("#formFileMultiple").files[0]);
     formData.append("writer", user.id);
     formData.append("title", e.target.querySelector("#formGroupEmail").value);
     formData.append("hashtag", tagData);
+    formData.append("type", "image")
 
     dispatch({
       type: UPLOAD_POST_REQUEST,

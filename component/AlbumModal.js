@@ -7,9 +7,9 @@ import {
   CREATE_FAVORITE_LIST_REQUEST,
   REMOVE_TO_FAVORITE_LIST_REQUEST
 } from "../config/event/eventName/userEvent";
-import FavoriteListCheckBox from "./FavoriteListCheckBox";
+import AlbumCheckBox from "./AlbumCheckBox";
 
-const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
+const AlbumModal = ({show, setShow, favoriteList: album, postInfo}) => {
   const {user} = useSelector(state => state.userReducer)
   const dispatch = useDispatch();
 
@@ -40,11 +40,11 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
         data: {
           ownerName: user.username,
           postId: postInfo.id,
-          favoriteId: idAddStr.substring(0, idAddStr.length-1)
+          albumId: idAddStr.substring(0, idAddStr.length-1)
         },
         plus: {
           postId: postInfo.id,
-          favoriteList: addIdList
+          albumList: addIdList
         }
       })
     }
@@ -55,11 +55,11 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
         data: {
           ownerName: user.username,
           postId: postInfo.id,
-          favoriteId: idRemoveStr.substring(0, idRemoveStr.length-1),
+          albumId: idRemoveStr.substring(0, idRemoveStr.length-1),
         },
         plus: {
           postId: postInfo.id,
-          favoriteList: removeIdList
+          albumList: removeIdList
         }
       })
     }
@@ -76,8 +76,8 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
   const onClickCreateList = () => {
     let flag = false;
 
-    for(let i=0; i<favoriteList.length; i++) {
-      if(favoriteList[i].name === listName) {
+    for(let i=0; i<album.length; i++) {
+      if(album[i].name === listName) {
         flag = true;
       }
     }
@@ -89,7 +89,7 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
         type: CREATE_FAVORITE_LIST_REQUEST,
         data: {
           ownerId: user.id,
-          favoriteTitle: listName
+          albumTitle: listName
         }
       })
     }
@@ -154,9 +154,9 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
       </Modal.Header>
       <Modal.Body>
         {
-          favoriteList.map(v => {
+          album.map(v => {
             return (
-              <FavoriteListCheckBox key={v.id} onClickCheckBox={onClickCheckBox} postId={postInfo.id} listInfo={v} posts={v.posts}/>
+              <AlbumCheckBox key={v.id} onClickCheckBox={onClickCheckBox} postId={postInfo.id} listInfo={v} posts={v.posts}/>
             )
           })
         }
@@ -187,4 +187,4 @@ const FavoriteModal = ({show, setShow, favoriteList, postInfo}) => {
   )
 }
 
-export default FavoriteModal;
+export default AlbumModal;

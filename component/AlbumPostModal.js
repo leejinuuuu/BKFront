@@ -5,13 +5,12 @@ import {backURL} from "../config/config";
 import axios from "axios";
 import SimplePostCard from "./SimplePostCard";
 
-const FavoriteListModal = ({show, setClose, favoriteInfo}) => {
+const AlbumPostModal = ({show, setClose, albumInfo}) => {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
     if(show) {
-      console.log("asdfasdf")
-      axios.get(backURL + "/favorite/post?favoritelistId=" + favoriteInfo.id)
+      axios.get(backURL + "/album/post?albumId=" + favoriteInfo.id)
         .then(res => {
           let temp = []
           for (let i = 0; i < Math.ceil(res.data.length / 4) * 4; i+=4) {
@@ -40,7 +39,7 @@ const FavoriteListModal = ({show, setClose, favoriteInfo}) => {
   return(
     <Modal show={show} onHide={setClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Make Your Clan!</Modal.Title>
+        <Modal.Title>Album Posts</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {posts}
@@ -49,4 +48,4 @@ const FavoriteListModal = ({show, setClose, favoriteInfo}) => {
   )
 }
 
-export default connect(state => state)(FavoriteListModal);
+export default connect(state => state)(AlbumPostModal);

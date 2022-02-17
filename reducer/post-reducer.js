@@ -1,12 +1,21 @@
 import produce from "immer";
 import {
-  ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_REPLY_FAILURE, ADD_REPLY_REQUEST, ADD_REPLY_SUCCESS,
+  ADD_COMMENT_REQUEST,
+  ADD_COMMENT_SUCCESS,
+  ADD_REPLY_FAILURE,
+  ADD_REPLY_REQUEST,
+  ADD_REPLY_SUCCESS,
   LIKED_POST_FAILURE,
   LIKED_POST_REQUEST,
   LIKED_POST_SUCCESS,
   LOAD_ALL_POST_FAILURE,
   LOAD_ALL_POST_REQUEST,
-  LOAD_ALL_POST_SUCCESS, LOAD_FULL_POST_SUCCESS, PICK_COMMENT_TO_REPLY, SORT_POSTS,
+  LOAD_ALL_POST_SUCCESS,
+  LOAD_FULL_POST_SUCCESS,
+  LOAD_TOP20_LIKED_POST_REQUEST,
+  LOAD_TOP20_LIKED_POST_SUCCESS,
+  PICK_COMMENT_TO_REPLY,
+  SORT_POSTS,
   UNLIKED_POST_FAILURE,
   UNLIKED_POST_REQUEST,
   UNLIKED_POST_SUCCESS,
@@ -38,7 +47,8 @@ const initialState = {
   isAddedReply: false,
   AddReplyError: "",
 
-  postInfo: {}
+  postInfo: {},
+  top20LikedPosts: []
 }
 
 const postReducer = (state = initialState, action) => {
@@ -157,7 +167,11 @@ const postReducer = (state = initialState, action) => {
         }
         break;
       case LOAD_FULL_POST_SUCCESS:
-        draft.postInfo = action.data
+        draft.postInfo = action.data;
+        break;
+
+      case LOAD_TOP20_LIKED_POST_SUCCESS:
+        draft.top20LikedPosts = action.data;
         break;
       default:
         break;

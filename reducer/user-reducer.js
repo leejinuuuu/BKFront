@@ -228,11 +228,11 @@ const userReducer = (state = initialState, action) => {
         });
         break;
       case CREATE_FAVORITE_LIST_SUCCESS:
-        draft.user.favorites = [action.data, ...draft.user.favorites];
+        draft.user.albums = [action.data, ...draft.user.albums];
         break;
       case ADD_TO_FAVORITE_LIST_SUCCESS:
-        draft.user.favorites.forEach((v, i) => {
-          action.plus.favoriteList.forEach((fv, fi) => {
+        draft.user.albums.forEach((v, i) => {
+          action.plus.albums.forEach((fv, fi) => {
             if(v.id === fv) {
               v.posts = [{id: action.plus.postId}, ...v.posts]
             }
@@ -241,20 +241,18 @@ const userReducer = (state = initialState, action) => {
         break;
       case REMOVE_TO_FAVORITE_LIST_SUCCESS:
         let index2 = [];
-        draft.user.favorites.map(v => {
+        draft.user.albums.map(v => {
           action.plus.favoriteList.forEach((fv, fi) => {
               if(v.id === fv) {
                 index2.push(fi);
             }
           })
         })
-        console.log(index2)
         index2.map(v => {
-          draft.user.favorites[v].posts.forEach((pv, pi) => {
+          draft.user.albums[v].posts.forEach((pv, pi) => {
             console.log(pv.id, action.plus.postId)
             if(pv.id === action.plus.postId) {
-              console.log(pi, v)
-              draft.user.favorites[v].posts.splice(pi, 1);
+              draft.user.albums[v].posts.splice(pi, 1);
             }
           })
         })

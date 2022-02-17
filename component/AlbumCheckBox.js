@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FormControl, InputGroup} from "react-bootstrap";
 
-const FavoriteListCheckBox = ({postId, listInfo, posts, onClickCheckBox}) => {
+const AlbumCheckBox = ({postId, listInfo, posts, onClickCheckBox}) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isContained, setIsContained] = useState(false);
 
@@ -32,4 +32,4 @@ const FavoriteListCheckBox = ({postId, listInfo, posts, onClickCheckBox}) => {
   )
 }
 
-export default FavoriteListCheckBox;
+export default AlbumCheckBox;

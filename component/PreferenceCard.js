@@ -1,7 +1,5 @@
-import React, {useCallback, useState} from 'react'
-import PostModal from "./PostModal";
-import {useDispatch, useSelector} from "react-redux";
-import {SHOW_MODAL} from "../config/event/eventName/modal";
+import React from 'react'
+import {useDispatch} from "react-redux";
 import {Image} from "react-bootstrap";
 
 const PreferenceCard = ({postInfo, isClicked, keyValue}) => {
