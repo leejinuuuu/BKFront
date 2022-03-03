@@ -10,7 +10,7 @@ const AlbumPostModal = ({show, setClose, albumInfo}) => {
 
   useEffect(() => {
     if(show) {
-      axios.get(backURL + "/album/post?albumId=" + favoriteInfo.id)
+      axios.get(backURL + "/album/post?albumId=" + albumInfo.id)
         .then(res => {
           let temp = []
           for (let i = 0; i < Math.ceil(res.data.length / 4) * 4; i+=4) {

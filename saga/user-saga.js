@@ -33,9 +33,15 @@ const watchUnSubscribeClan = createSaga("UNSUBSCRIBE_CLAN", backURL + "/clan/uns
 
 const watchCreateFavorite = createSaga("CREATE_FAVORITE_LIST", backURL + "/album/create", "post")
 
-const watchAddFavoritePost = createSaga("ADD_TO_FAVORITE_LIST", backURL + "/album/add", "post")
+const watchAddAlbumPost = createSaga("ADD_TO_FAVORITE_LIST", backURL + "/album/add", "post")
 
-const watchRemoveFavoritePost = createSaga("REMOVE_TO_FAVORITE_LIST", backURL + "/album/remove", "post")
+const watchRemoveAlbumPost = createSaga("REMOVE_TO_FAVORITE_LIST", backURL + "/album/remove", "post")
+
+const watchRemoveAlbum = createSaga("REMOVE_ALBUM", backURL + "/album/delete/all", "get")
+
+const watchUpdateAlbum = createSaga("UPDATE_ALBUM", backURL + "/album/update/all", "get")
+
+const watchUpdateProfile = createSaga("UPDATE_PROFILE", backURL + "/user/update", "post")
 
 export default function* userSaga() {
   yield all([
@@ -54,7 +60,10 @@ export default function* userSaga() {
     fork(watchSubscribeClan),
     fork(watchUnSubscribeClan),
     fork(watchCreateFavorite),
-    fork(watchAddFavoritePost),
-    fork(watchRemoveFavoritePost)
+    fork(watchAddAlbumPost),
+    fork(watchRemoveAlbumPost),
+    fork(watchRemoveAlbum),
+    fork(watchUpdateAlbum),
+    fork(watchUpdateProfile)
   ]);
 }

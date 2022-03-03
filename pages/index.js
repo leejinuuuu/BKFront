@@ -30,9 +30,6 @@ const home = () => {
     }
   }
 
-  if (session && LoadingUserError) {
-    router.push("/signup?google=" + session.user.name)
-  }
 
   const onScroll = () => {
     let temp = window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight
@@ -61,11 +58,6 @@ const home = () => {
     if(window.innerWidth > 1400) setWidth(true);
     else setWidth(false)
 
-    if (session) {
-      if(LoadingUserError) {
-        router.push("/signup?google=" + session.user.name)
-      }
-    }
     return () => {
       window.removeEventListener('resize', handleResize)
     }

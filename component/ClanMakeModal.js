@@ -16,6 +16,7 @@ const ClanMakeModal = ({show, setShow}) => {
 
     const formData = new FormData();
     formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
+    formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
     formData.append("master", user.id);
     formData.append("name", e.target.querySelector("#formBasicTitle").value)
 
@@ -40,6 +41,10 @@ const ClanMakeModal = ({show, setShow}) => {
           </Form.Group>
           <Form.Group controlId="formFileMultiple" className="mb-3">
             <Form.Label>Select ProfileImage</Form.Label>
+            <Form.Control type="file" multiple />
+          </Form.Group>
+          <Form.Group controlId="formFileMultiple2" className="mb-3">
+            <Form.Label>Select BackgroundImage</Form.Label>
             <Form.Control type="file" multiple />
           </Form.Group>
           <Button variant="primary" type="submit">

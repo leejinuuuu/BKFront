@@ -29,6 +29,14 @@ const signup = () => {
   const handleClose = () => setShow(false);
 
   useEffect(() => {
+
+    if(router.query !== null) {
+      if(router.query.google !== null) {
+        setDefaultName(router.query.google);
+        setUsername(router.query.google);
+      }
+    }
+
     if(router.query.google) {
       setUsernameChecked(true)
     } else if(isSignedUp && !usernameChecked) {
@@ -37,22 +45,13 @@ const signup = () => {
 
     if(isSignedUp && usernameChecked) {
       alert("SignUp SUCCESSED!!!")
-      router.push("/login")
+      setCookie("SUID", username, {path: "/"})
+      router.push("/")
     } else {
       console.log(isSignedUp)
       console.log(usernameChecked)
     }
-
-
   }, [isSignedUp, usernameChecked, router.query.google])
-
-  useEffect(() => {
-    if(router.query !== null) {
-      if(router.query.google !== null) {
-        setDefaultName(router.query.google);
-      }
-    }
-  }, [])
 
   const handleSubmit = useCallback( e => {
     const form = e.currentTarget;

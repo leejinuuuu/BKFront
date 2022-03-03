@@ -6,13 +6,11 @@ import {
   Container,
   Dropdown, DropdownButton,
   Image,
-  Nav,
   Navbar,
   Row
 } from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import Link from 'next/link'
-import {LOGOUT_REQUEST} from "../config/event/eventName/userEvent";
 import UploadPostModal from "./UploadPostModal";
 import {imageURL} from "../config/config";
 import {useCookies} from "react-cookie";
@@ -59,15 +57,11 @@ const AppLayout = ({ children }) => {
               <Link href="/login"><Button variant="outline-success">Sign-Up</Button></Link>{' '}
             </span>
           }
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav
-              className="mr-auto my-2 my-lg-0"
-              style={{ maxHeight: '100px' }}
-              navbarScroll
-            >
-            </Nav>
-          </Navbar.Collapse>
+          <div>
+            <Link href={"/"}>
+              <Button>Home</Button>
+            </Link>
+          </div>
           <DropdownButton
             as={ButtonGroup}
             id={`dropdown-variants-Secondary`}

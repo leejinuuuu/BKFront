@@ -6,7 +6,9 @@ import {
   AUTH_WITH_EMAIL_SUCCESS,
   CREATE_CLAN_FAILURE,
   CREATE_CLAN_REQUEST,
-  CREATE_CLAN_SUCCESS, CREATE_FAVORITE_LIST_SUCCESS, FOLLOW_ACCOUNT_SUCCESS,
+  CREATE_CLAN_SUCCESS,
+  CREATE_FAVORITE_LIST_SUCCESS,
+  FOLLOW_ACCOUNT_SUCCESS,
   GET_CLAN_DATA_FAILURE,
   GET_CLAN_DATA_REQUEST,
   GET_CLAN_DATA_SUCCESS,
@@ -25,10 +27,18 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_FAILURE,
   LOGOUT_REQUEST,
-  LOGOUT_SUCCESS, REMOVE_TO_FAVORITE_LIST_SUCCESS,
+  LOGOUT_SUCCESS,
+  REMOVE_ALBUM_REQUEST,
+  REMOVE_ALBUM_SUCCESS,
+  REMOVE_TO_FAVORITE_LIST_SUCCESS,
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
-  SIGNUP_SUCCESS, SUBSCRIBE_CLAN_SUCCESS, UNFOLLOW_ACCOUNT_SUCCESS, UNSUBSCRIBE_CLAN_SUCCESS
+  SIGNUP_SUCCESS,
+  SUBSCRIBE_CLAN_SUCCESS,
+  UNFOLLOW_ACCOUNT_SUCCESS,
+  UNSUBSCRIBE_CLAN_SUCCESS,
+  UPDATE_ALBUM_SUCCESS,
+  UPDATE_PROFILE_SUCCESS
 } from "../config/event/eventName/userEvent";
 import {UPLOAD_CLAN_POST_SUCCESS} from "../config/event/eventName/postEvent";
 
@@ -255,6 +265,38 @@ const userReducer = (state = initialState, action) => {
               draft.user.albums[v].posts.splice(pi, 1);
             }
           })
+        })
+        break;
+      case REMOVE_ALBUM_SUCCESS:
+        let userIndex = 0
+        let profileIndex = 0
+
+        draft.user.albums.forEach((v, i) => {
+          if(v.id === action.plus.albumId) {
+            userIndex = i
+          }
+        })
+
+        draft.myProfile.albums.forEach((v, i) => {
+          if(v.id === action.plus.albumId) {
+            profileIndex = i
+          }
+        })
+
+        draft.user.albums.splice(userIndex, 1)
+        draft.myProfile.albums.splice(profileIndex, 1)
+        break;
+      case UPDATE_ALBUM_SUCCESS:
+        draft.user.albums.forEach((v, i) => {
+          if(v.id === action.plus.albumId) {
+            v.name = action.plus.name
+          }
+        })
+
+        draft.myProfile.albums.forEach((v, i) => {
+          if(v.id === action.plus.albumId) {
+            v.name = action.plus.name
+          }
         })
         break;
       default:

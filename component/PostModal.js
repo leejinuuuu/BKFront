@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Comment from "./Comment";
 import {
   ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS,
-  ADD_REPLY_REQUEST,
+  ADD_REPLY_REQUEST, DELETE_POST_REQUEST,
   LIKED_POST_REQUEST, LOAD_ALL_POST_REQUEST,
   UNLIKED_POST_REQUEST
 } from "../config/event/eventName/postEvent";
@@ -142,6 +142,18 @@ const PostModal = ({postInfo, show, setShow}) => {
     }
   }, [liked, postInfo])
 
+  const onClickDeletePost = useCallback((postId) => () => {
+    dispatch({
+      type: DELETE_POST_REQUEST,
+      params: {
+        postId: postId
+      },
+      plus: {
+        postId: postId
+      }
+    })
+  }, [postInfo])
+
   return(
     <span>
       <Modal
@@ -182,12 +194,20 @@ const PostModal = ({postInfo, show, setShow}) => {
                           <div className="date">
                             {postInfo.createdAt.substring(0, 10)}
                           </div>
+                          {
+                            postInfo.writer.name === user.username &&
+                              <div className="meta" style={{marginLeft:"30px"}} onClick={onClickDeletePost(postInfo.id)}>
+                                <a className="like">
+                                <i className="delete icon"/> Delete
+                                </a>
+                              </div>
+                          }
                         </div>
-                        {/*<div className="meta">*/}
-                        {/*  <a className="like">*/}
-                        {/*    <i className="like icon"/> Follow*/}
-                        {/*  </a>*/}
-                        {/*</div>*/}
+                        <div className="meta">
+                          <a className="like">
+                            <i className="like icon"/> Follow
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ import {
   ADD_COMMENT_SUCCESS,
   ADD_REPLY_FAILURE,
   ADD_REPLY_REQUEST,
-  ADD_REPLY_SUCCESS,
+  ADD_REPLY_SUCCESS, DELETE_POST_SUCCESS,
   LIKED_POST_FAILURE,
   LIKED_POST_REQUEST,
   LIKED_POST_SUCCESS,
@@ -172,6 +172,15 @@ const postReducer = (state = initialState, action) => {
 
       case LOAD_TOP20_LIKED_POST_SUCCESS:
         draft.top20LikedPosts = action.data;
+        break;
+      case DELETE_POST_SUCCESS:
+        let index = ""
+        draft.mainPost.forEach((v, i) => {
+          if(v.id === action.plus.postId) {
+             index = i
+          }
+        })
+        draft.mainPost.splice(index, 1)
         break;
       default:
         break;

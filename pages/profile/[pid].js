@@ -1,5 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Accordion, Button, Col, Image, ListGroup, Row, Tab, Tabs} from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Col,
+  FormControl,
+  Image,
+  InputGroup,
+  ListGroup,
+  Modal,
+  Row,
+  Tab,
+  Tabs
+} from "react-bootstrap";
 import AppLayout from "../../component/AppLayout";
 import FollowAccount from "../../component/FollowAccount";
 import {connect, useDispatch, useSelector} from "react-redux";
@@ -8,8 +20,8 @@ import axios from "axios";
 import {
   FOLLOW_ACCOUNT_REQUEST,
   LOAD_MY_PROFILE_REQUEST,
-  LOAD_USER_REQUEST,
-  UNFOLLOW_ACCOUNT_REQUEST
+  LOAD_USER_REQUEST, REMOVE_ALBUM_REQUEST, REMOVE_ALBUM_SUCCESS,
+  UNFOLLOW_ACCOUNT_REQUEST, UPDATE_ALBUM_REQUEST, UPDATE_ALBUM_SUCCESS, UPDATE_PROFILE_REQUEST
 } from "../../config/event/eventName/userEvent";
 import {END} from "redux-saga";
 import ThumbnailPostCard from "../../component/ThumbnailPostCard";
@@ -21,6 +33,7 @@ import {object} from "prop-types";
 import AlbumModal from "../../component/AlbumModal";
 import FavoriteListModal from "../../component/AlbumPostModal";
 import AlbumPostModal from "../../component/AlbumPostModal";
+import UpdateProfileModal from "../../component/UpdateProfileModal";
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -29,9 +42,15 @@ const Profile = () => {
 
   const [isFollowing, setIsFollowing] = useState(false)
   const [session, loadingSession] = useSession();
+  const [showInput, setShowInput] = useState(false);
+  const [targetAlbum, setTargetAlbum] = useState({})
+  const [albumName, setAlbumName] = useState("")
 
   const [showCreateClan, setShowCreateClan] = useState(false);
   const handleShowCreateClan = () => setShowCreateClan(true);
+
+  const [showUpdateProfile, setShowUpdateProfile] = useState(false);
+  const handleShowUpdateProfile = () => setShowUpdateProfile(true)
 
   const [showAlbums, setShowAlbums] = useState(Array(user.albums.length).fill(false))
   const handleShowAlbums = (index) => () => {
@@ -75,6 +94,51 @@ const Profile = () => {
       }
     })
   }, [])
+
+  const onClickDeleteAlbum = useCallback((albumId) => () => {
+    dispatch({
+      type: REMOVE_ALBUM_REQUEST,
+      params: {
+        albumId: albumId
+      },
+      plus: {
+        albumId: albumId
+      }
+    })
+  }, [])
+
+  const onClickUpdateAlbum = useCallback((albumId) => () => {
+    dispatch({
+      type: UPDATE_ALBUM_REQUEST,
+      params: {
+        albumId: albumId,
+        name: albumName
+      },
+      plus: {
+        albumId: albumId,
+        name: albumName
+      }
+    })
+    setShowInput(false)
+  }, [albumName])
+
+  const handleInputClose = () => {
+    setTargetAlbum("")
+    setShowInput(false);
+  }
+  const handleInputShow = (album) => () => {
+    setTargetAlbum(album)
+    setShowInput(true);
+  }
+
+  const onChangeAlbumName = (e) => {
+    setAlbumName(e.target.value)
+  }
+
+  const onClickSetPublic = (e) => {
+
+  }
+
   return (
     <>
       <AppLayout/>
@@ -87,6 +151,15 @@ const Profile = () => {
             <Image style={{marginTop: "-150px", height: "200px", objectFit: "cover"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
             <h2>{myProfile.username}</h2>
             <p>{myProfile.message}</p>
+          </div>
+          <div style={{textAlign: "center", margin: "20px"}}>
+            {
+              user.username === myProfile.username &&
+                <span>
+                  <Button variant="outline-dark" style={{marginRight: "10px"}} onClick={handleShowUpdateProfile}>프로필 수정</Button>
+                  <Button variant="outline-dark" onClick={handleShowCreateClan}>비공개 설정</Button>
+                </span>
+            }
           </div>
           <div style={{textAlign: "center", margin: "20px"}}>
             {
@@ -134,10 +207,10 @@ const Profile = () => {
           <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
             <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
               <Tab eventKey="home" title="내가 쓴 글">
-                {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard postInfo={v}/>)}
+                {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
               </Tab>
               <Tab eventKey="profile" title="그룹이 쓴 글">
-                {myProfile.writePostAsClan.map(v => <ThumbnailPostCard postInfo={v}/>)}
+                {myProfile.writePostAsClan.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
               </Tab>
             </Tabs>
           </Row>
@@ -147,22 +220,54 @@ const Profile = () => {
                 <ListGroup>
                   {
                     myProfile.albums.map((v, i) => (
-                      <ListGroup.Item onClick={handleShowAlbums(i)}>
-                        <div>{v.name}</div>
+                      <ListGroup.Item key={v.id}>
+                        <Row>
+                          <Col style={{paddingTop:"5px"}}><span style={{fontWeight: "900", fontSize: "large"}}>{v.name}</span></Col>
+                          <Col/>
+                          <Col>
+                            <Button style={{width: "30%", marginRight: "2%"}} onClick={handleShowAlbums(i)}>보기</Button>
+                            <Button style={{width: "30%", marginRight: "2%"}} variant="primary" onClick={handleInputShow(v)}>수정</Button>
+                            <Button style={{width: "30%"}} onClick={onClickDeleteAlbum(v.id)}>삭제</Button>
+                          </Col>
+                        </Row>
                       </ListGroup.Item>
                     ))
                   }
                 </ListGroup>
               </Tab>
-              <Tab eventKey="likedPost" title="앨범">
+              <Tab eventKey="likedPost" title="즐겨찾기">
                 <div>asdfasdf</div>
               </Tab>
             </Tabs>
           </Row>
         </Col>
       </Row>
+
       <ClanMakeModal show={showCreateClan} setShow={setShowCreateClan} />
-      { myProfile.albums.map((v, i) => <AlbumPostModal show={showAlbums[i]} setClose={handleCloseAlbums(i)} albumInfo={v}/>)}
+
+      { myProfile.albums.map((v, i) => <AlbumPostModal key={v.id} show={showAlbums[i]} setClose={handleCloseAlbums(i)} albumInfo={v}/>)}
+
+      <UpdateProfileModal show={showUpdateProfile} setShow={setShowUpdateProfile} profile={myProfile}/>
+
+      <Modal show={showInput} onHide={handleInputClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder={targetAlbum.name}
+              aria-label={targetAlbum.name}
+              aria-describedby="basic-addon2"
+              onChange={onChangeAlbumName}
+              value={albumName}
+            />
+            <Button variant="outline-secondary" id="button-addon2" onClick={onClickUpdateAlbum(targetAlbum.id)}>
+              Button
+            </Button>
+          </InputGroup>
+        </Modal.Body>
+      </Modal>
     </>
   )
 }

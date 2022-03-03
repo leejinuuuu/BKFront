@@ -16,7 +16,6 @@ const createSaga = (name, url, method) => {
     const eventVar = function* event(action) {
         try {
             const result = yield call(eventAPI, action);
-            console.log("urlss", name + "_SUCCESS", result)
             yield put({
                 type: name + "_SUCCESS",
                 data: result,

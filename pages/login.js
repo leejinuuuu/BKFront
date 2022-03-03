@@ -12,21 +12,19 @@ import GoogleButton from "react-google-button";
 const login = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isLoggedIn, user } = useSelector(state => state.userReducer);
+  const { isLoggedIn, user, LoadingUserError } = useSelector(state => state.userReducer);
   const [cookies, setCookie] = useCookies(['user']);
   const [session, loadingSession] = useSession();
 
-  if(user && user.accessToken) {
-    alert("LogIn SUCCEED!!!")
-    setCookie("accessToken", user.accessToken, {path: "/"})
-    setCookie("platform", user.platform, {path: "/"})
-    setCookie("SUID", user.username, {path: "/"})
-    router.push("/")
-  }
-
   if(session) {
-    router.push("/")
-    setCookie("SUID", session.user.name, {path: "/"})
+    if(LoadingUserError || !user) {
+      router.push("/signup?google=" + session.user.name)
+    } else if(user) {
+      setCookie("accessToken", user.accessToken, {path: "/"})
+      setCookie("platform", user.platform, {path: "/"})
+      setCookie("SUID", user.username, {path: "/"})
+      router.push("/")
+    }
   }
 
   const handleSubmit = useCallback(e => {
@@ -65,7 +63,7 @@ const login = () => {
           <Link href="/signup"><Button style={{width: "100%"}} variant="outline-success">회원 가입</Button></Link>{' '}
           <Divider horizontal>Or</Divider>
           {
-            !session && (
+            (!session) && (
               <GoogleButton onClick={() => signIn()}>Sign In</GoogleButton>
             )
           }

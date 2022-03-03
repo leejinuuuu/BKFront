@@ -18,6 +18,8 @@ const watchGetFullPost = createSaga("LOAD_FULL_POST", backURL + "/post", "get")
 
 const watchGetTop20LikedPosts = createSaga("LOAD_TOP20_LIKED_POST", backURL + "/post/liked/top", "get")
 
+const watchDeletePost = createSaga("DELETE_POST", backURL + "/post/delete", "get")
+
 export default function* postSaga() {
   yield all([
     fork(watchGetPost),
@@ -27,6 +29,7 @@ export default function* postSaga() {
     fork(watchAddComment),
     fork(watchAddReply),
     fork(watchGetFullPost),
-    fork(watchGetTop20LikedPosts)
+    fork(watchGetTop20LikedPosts),
+    fork(watchDeletePost)
   ]);
 }

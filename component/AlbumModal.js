@@ -89,7 +89,8 @@ const AlbumModal = ({show, setShow, favoriteList: album, postInfo}) => {
         type: CREATE_FAVORITE_LIST_REQUEST,
         data: {
           ownerId: user.id,
-          albumTitle: listName
+          albumTitle: listName,
+          isPublic: true
         }
       })
     }
