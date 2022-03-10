@@ -89,8 +89,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     axios.defaults.withCredentials = true;
 
     if (req) {
-      if(cookie) {
+      if (cookie) {
         axios.defaults.headers.Cookie = cookie;
+      }
+      if(cookie.includes("SUID")) {
         store.dispatch({
           type: LOAD_USER_REQUEST
         });

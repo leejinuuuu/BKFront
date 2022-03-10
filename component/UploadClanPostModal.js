@@ -38,12 +38,12 @@ const UploadClanPostModal = ({show, setShow, clanId}) => {
     hashtag.map(v => tagData += "#" + v);
 
     const formData = new FormData();
+    formData.append("clanId", clanId)
     formData.append("File", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("Pny", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("writer", clanId);
+    formData.append("Pny", e.target.querySelector("#formFileMultiple").files[0])
     formData.append("title", e.target.querySelector("#formGroupEmail").value);
     formData.append("hashtag", tagData);
-    formData.append("type", "image")
+    formData.append("type", "image");
 
     dispatch({
       type: UPLOAD_CLAN_POST_REQUEST,

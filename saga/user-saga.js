@@ -43,6 +43,14 @@ const watchUpdateAlbum = createSaga("UPDATE_ALBUM", backURL + "/album/update/all
 
 const watchUpdateProfile = createSaga("UPDATE_PROFILE", backURL + "/user/update", "post")
 
+const watchUpdateClan = createSaga("UPDATE_CLAN", backURL + "/clan/update", "post")
+
+const watchDeleteClan = createSaga("DELETE_CLAN", backURL + "/clan/delete", "get")
+
+const watchAddBookmark = createSaga("BOOKMARK_POST", backURL + "/bookmark/add", "get")
+
+const watchRemoveBookmark = createSaga("UNBOOKMARK_POST", backURL + "/bookmark/delete", "get")
+
 export default function* userSaga() {
   yield all([
     fork(watchLogIn),
@@ -64,6 +72,10 @@ export default function* userSaga() {
     fork(watchRemoveAlbumPost),
     fork(watchRemoveAlbum),
     fork(watchUpdateAlbum),
-    fork(watchUpdateProfile)
+    fork(watchUpdateProfile),
+    fork(watchUpdateClan),
+    fork(watchDeleteClan),
+    fork(watchAddBookmark),
+    fork(watchRemoveBookmark)
   ]);
 }

@@ -14,37 +14,39 @@ const ClanMakeModal = ({show, setShow, profile}) => {
   const handleClose = () => setShow(false);
 
   const [username, setUsername] = useState("")
+  const [isPublic, setIsPublic] = useState(true)
 
   const onChangeUsername = (e) => {
     setUsername(e.target.value)
   }
 
-  const handleSubmit = useCallback( e => {
+  const handleSubmit = useCallback( async e => {
     e.preventDefault();
     e.stopPropagation();
-
-    const password = e.target.querySelector("#formGridPassword").value;
-    const message = e.target.querySelector("#formGridMessage").value;
 
     const formData = new FormData();
     formData.append("accountId", profile.id)
     formData.append("username", username);
-    formData.append("password", password);
+    formData.append("password", e.target.querySelector("#formGridPassword").value);
     formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
     formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-    formData.append("message", message);
+    formData.append("message", e.target.querySelector("#formGridMessage").value);
+    formData.append("isPublic", isPublic ? "false" : "true")
 
     dispatch({
       type: UPDATE_PROFILE_REQUEST,
       data: formData
     })
-    setCookie("SUID", username, {path: "/"})
+    if(username) {
+      await setCookie("SUID", username, {path: "/"})
+    }
     alert("수정이 완료되었습니다.")
-    router.push("/")
-  }, [username])
+    await router.push("/")
+  }, [username, profile])
 
-  useEffect(() => {
-  }, [])
+  const onClickRadio = useCallback((e) => {
+    setIsPublic(!isPublic)
+  }, [isPublic])
 
   return(
     <Modal show={show} onHide={handleClose}>
@@ -99,7 +101,14 @@ const ClanMakeModal = ({show, setShow, profile}) => {
               상태메세지를 입력해 주세요.
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit" variant="outline-dark" style={{marginLeft: "26%", width: "50%"}}>
+          <Form.Check
+              type="switch"
+              id="custom-switch"
+              label="공개여부"
+              onClick={onClickRadio}
+              checked={isPublic}
+          />
+          <Button type="submit" variant="outline-dark" style={{marginLeft: "26%", width: "50%", marginTop: "20px"}}>
             확인
           </Button>
         </Form>

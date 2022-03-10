@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {
-  Accordion,
   Button,
-  Col,
+  Col, Form,
   FormControl,
   Image,
   InputGroup,
@@ -14,7 +13,7 @@ import {
 } from "react-bootstrap";
 import AppLayout from "../../component/AppLayout";
 import FollowAccount from "../../component/FollowAccount";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import wrapper from "../../store/store-wrapper";
 import axios from "axios";
 import {
@@ -25,13 +24,10 @@ import {
 } from "../../config/event/eventName/userEvent";
 import {END} from "redux-saga";
 import ThumbnailPostCard from "../../component/ThumbnailPostCard";
-import ClanMakeModal from "../../component/ClanMakeModal";
+import ClanMakeModal from "../../component/CreateClanModal";
 import JoinedClan from "../../component/JoinedClan";
 import {useSession} from "next-auth/client";
 import {imageURL} from "../../config/config";
-import {object} from "prop-types";
-import AlbumModal from "../../component/AlbumModal";
-import FavoriteListModal from "../../component/AlbumPostModal";
 import AlbumPostModal from "../../component/AlbumPostModal";
 import UpdateProfileModal from "../../component/UpdateProfileModal";
 
@@ -45,6 +41,7 @@ const Profile = () => {
   const [showInput, setShowInput] = useState(false);
   const [targetAlbum, setTargetAlbum] = useState({})
   const [albumName, setAlbumName] = useState("")
+  const [isPublic, setIsPublic] = useState(true)
 
   const [showCreateClan, setShowCreateClan] = useState(false);
   const handleShowCreateClan = () => setShowCreateClan(true);
@@ -112,11 +109,13 @@ const Profile = () => {
       type: UPDATE_ALBUM_REQUEST,
       params: {
         albumId: albumId,
-        name: albumName
+        name: albumName,
+        isPublic: isPublic ? "false" : "true"
       },
       plus: {
         albumId: albumId,
-        name: albumName
+        name: albumName,
+        isPublic: isPublic ? "false" : "true"
       }
     })
     setShowInput(false)
@@ -135,9 +134,9 @@ const Profile = () => {
     setAlbumName(e.target.value)
   }
 
-  const onClickSetPublic = (e) => {
-
-  }
+  const onClickRadio = useCallback(() => {
+  setIsPublic(!isPublic)
+  }, [isPublic])
 
   return (
     <>
@@ -157,95 +156,97 @@ const Profile = () => {
               user.username === myProfile.username &&
                 <span>
                   <Button variant="outline-dark" style={{marginRight: "10px"}} onClick={handleShowUpdateProfile}>프로필 수정</Button>
-                  <Button variant="outline-dark" onClick={handleShowCreateClan}>비공개 설정</Button>
+                  {
+                    user.username === myProfile.username ?
+                        <Button variant="outline-dark" onClick={handleShowCreateClan}>Create Clan</Button> :
+                        isFollowing ?
+                            <Button variant="outline-dark" onClick={onClickUnFollow}>unFollow</Button> :
+                            <Button variant="outline-dark" onClick={onClickFollow}>Follow</Button>
+                  }
                 </span>
             }
           </div>
-          <div style={{textAlign: "center", margin: "20px"}}>
-            {
-              user.username === myProfile.username ?
-                <Button variant="outline-dark" onClick={handleShowCreateClan}>Create Clan</Button> :
-                isFollowing ?
-                  <Button variant="outline-dark" onClick={onClickUnFollow}>unFollow</Button> :
-                  <Button variant="outline-dark" onClick={onClickFollow}>Follow</Button>
-            }
-          </div>
         </Col>
       </Row>
-      <Row style={{marginLeft: "10px"}}>
-        <Col lg={5}>
-          <h3 className="ui header">Follwer / Following</h3>
-          <div>
-            <div className="ui segment" style={{overflowY: "scroll" , marginLeft: "-5px", height: "200px", overflowX: "hidden"}}>
-              <div className="ui inverted dimmer">
-                <div className="ui text loader">Loading</div>
+      {
+        (myProfile.isPublic || (user.username === myProfile.username)) &&
+          <Row style={{marginLeft: "10px"}}>
+            <Col lg={5}>
+              <h3 className="ui header">Follwer / Following</h3>
+              <div>
+                <div className="ui segment" style={{overflowY: "scroll" , marginLeft: "-5px", height: "200px", overflowX: "hidden"}}>
+                  <div className="ui inverted dimmer">
+                    <div className="ui text loader">Loading</div>
+                  </div>
+                  <FollowAccount accounts={myProfile.follower} isFollower={true}/>
+                  <FollowAccount accounts={myProfile.followee} isFollower={false}/>
+                </div>
               </div>
-              <FollowAccount accounts={myProfile.follower} isFollower={true}/>
-              <FollowAccount accounts={myProfile.followee} isFollower={false}/>
-            </div>
-          </div>
-          <div style={{marginBottom: "20px", marginTop: "10px"}}>
-            <h3 className="ui header">Friends</h3>
-            <div className="ui segment" style={{overflowY: "scroll", marginLeft: "-5px", height: "200px", overflowX: "hidden", marginTop: "-3px"}}>
-              <div className="ui inverted dimmer">
-                <div className="ui text loader">Loading</div>
+              <div style={{marginBottom: "20px", marginTop: "10px"}}>
+                <h3 className="ui header">Friends</h3>
+                <div className="ui segment" style={{overflowY: "scroll", marginLeft: "-5px", height: "200px", overflowX: "hidden", marginTop: "-3px"}}>
+                  <div className="ui inverted dimmer">
+                    <div className="ui text loader">Loading</div>
+                  </div>
+                  <FollowAccount accounts={myProfile.friend}/>
+                </div>
               </div>
-              <FollowAccount accounts={myProfile.friend}/>
-            </div>
-          </div>
-          <div style={{marginBottom: "20px", marginTop: "10px"}}>
-            <h3 className="ui header">Clans</h3>
-            <div className="ui segment" style={{overflowY: "scroll", marginLeft: "-5px", height: "200px", overflowX: "hidden", marginTop: "-3px"}}>
-              <div className="ui inverted dimmer">
-                <div className="ui text loader">Loading</div>
+              <div style={{marginBottom: "20px", marginTop: "10px"}}>
+                <h3 className="ui header">Clans</h3>
+                <div className="ui segment" style={{overflowY: "scroll", marginLeft: "-5px", height: "200px", overflowX: "hidden", marginTop: "-3px"}}>
+                  <div className="ui inverted dimmer">
+                    <div className="ui text loader">Loading</div>
+                  </div>
+                  <JoinedClan clans={myProfile.clans}/>
+                </div>
               </div>
-              <JoinedClan clans={myProfile.clans}/>
-            </div>
-          </div>
-        </Col>
-        <Col lg={7}>
-          <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
-            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
-              <Tab eventKey="home" title="내가 쓴 글">
-                {myProfile.writePostAsAccount.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
-              </Tab>
-              <Tab eventKey="profile" title="그룹이 쓴 글">
-                {myProfile.writePostAsClan.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
-              </Tab>
-            </Tabs>
-          </Row>
-          <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
-            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
-              <Tab eventKey="album" title="앨범">
-                <ListGroup>
+            </Col>
+            <Col lg={7}>
+              <Row style={{marginTop: "3%", padding: "10px", paddingRight: "18%"}}>
+                <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+                  <Tab eventKey="home" title="내가 쓴 글">
+                    {myProfile.writePost.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
+                  </Tab>
+                  <Tab eventKey="album" title="앨범">
+                    <ListGroup>
+                      {
+                        myProfile.albums.map((v, i) => (
+                            (user.username === myProfile.username || v.isPublic) &&
+                              <ListGroup.Item key={v.id}>
+                                <Row>
+                                  <Col style={{paddingTop:"5px"}}><span style={{fontWeight: "900", fontSize: "large"}}>{v.name}</span></Col>
+                                  <Col/>
+                                  <Col>
+                                    <Button style={{width: "30%", marginRight: "2%"}} onClick={handleShowAlbums(i)}>보기</Button>
+                                    {
+                                        myProfile.username === user.username &&
+                                        <span>
+                                        <Button style={{width: "30%", marginRight: "2%"}} variant="primary" onClick={handleInputShow(v)}>수정</Button>
+                                        <Button style={{width: "30%"}} onClick={onClickDeleteAlbum(v.id)}>삭제</Button>
+                                      </span>
+                                    }
+                                  </Col>
+                                </Row>
+                              </ListGroup.Item>
+                        ))
+                      }
+                    </ListGroup>
+                  </Tab>
                   {
-                    myProfile.albums.map((v, i) => (
-                      <ListGroup.Item key={v.id}>
-                        <Row>
-                          <Col style={{paddingTop:"5px"}}><span style={{fontWeight: "900", fontSize: "large"}}>{v.name}</span></Col>
-                          <Col/>
-                          <Col>
-                            <Button style={{width: "30%", marginRight: "2%"}} onClick={handleShowAlbums(i)}>보기</Button>
-                            <Button style={{width: "30%", marginRight: "2%"}} variant="primary" onClick={handleInputShow(v)}>수정</Button>
-                            <Button style={{width: "30%"}} onClick={onClickDeleteAlbum(v.id)}>삭제</Button>
-                          </Col>
-                        </Row>
-                      </ListGroup.Item>
-                    ))
+                      myProfile.username === user.username &&
+                      <Tab eventKey="likedPost" title="즐겨찾기">
+                        {user.bookmarkedPosts.map(v => <ThumbnailPostCard key={v.id} postInfo={v}/>)}
+                      </Tab>
                   }
-                </ListGroup>
-              </Tab>
-              <Tab eventKey="likedPost" title="즐겨찾기">
-                <div>asdfasdf</div>
-              </Tab>
-            </Tabs>
+                </Tabs>
+              </Row>
+            </Col>
           </Row>
-        </Col>
-      </Row>
+      }
 
       <ClanMakeModal show={showCreateClan} setShow={setShowCreateClan} />
 
-      { myProfile.albums.map((v, i) => <AlbumPostModal key={v.id} show={showAlbums[i]} setClose={handleCloseAlbums(i)} albumInfo={v}/>)}
+      { myProfile.albums.map((v, i) =>  <AlbumPostModal key={v.id} show={showAlbums[i]} setClose={handleCloseAlbums(i)} albumInfo={v}/>)}
 
       <UpdateProfileModal show={showUpdateProfile} setShow={setShowUpdateProfile} profile={myProfile}/>
 
@@ -266,6 +267,15 @@ const Profile = () => {
               Button
             </Button>
           </InputGroup>
+          <Form>
+            <Form.Check
+                type="switch"
+                id="custom-switch"
+                label="공개여부"
+                checked={isPublic}
+                onClick={onClickRadio}
+            />
+          </Form>
         </Modal.Body>
       </Modal>
     </>

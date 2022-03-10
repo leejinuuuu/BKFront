@@ -17,7 +17,7 @@ const signup = () => {
   const [session, loadingSession] = useSession();
 
   const [isAuthed, setIsAuthed] = useState(true);
-  const [validated, setValidated] = useState(true);
+  const [validated, setValidated] = useState(false);
 
   const [username, setUsername] = useState("");
   const [defaultName, setDefaultName] = useState("");
@@ -29,17 +29,13 @@ const signup = () => {
   const handleClose = () => setShow(false);
 
   useEffect(() => {
-
-    if(router.query !== null) {
-      if(router.query.google !== null) {
-        setDefaultName(router.query.google);
-        setUsername(router.query.google);
-      }
+    if(session) {
+      setDefaultName(session.user.name);
+      setUsername(session.user.name);
+      setUsernameChecked(true)
     }
 
-    if(router.query.google) {
-      setUsernameChecked(true)
-    } else if(isSignedUp && !usernameChecked) {
+    if(isSignedUp && !usernameChecked) {
       alert("아이디를 확인해 주세요!!!!")
     }
 
@@ -47,9 +43,6 @@ const signup = () => {
       alert("SignUp SUCCESSED!!!")
       setCookie("SUID", username, {path: "/"})
       router.push("/")
-    } else {
-      console.log(isSignedUp)
-      console.log(usernameChecked)
     }
   }, [isSignedUp, usernameChecked, router.query.google])
 
@@ -57,34 +50,36 @@ const signup = () => {
     const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
-    if(form.checkValidity() === true) {
-      const password = e.target.querySelector("#formGridPassword").value;
-      const message = e.target.querySelector("#formGridMessage").value;
-      let birthYear = e.target.querySelector("#formGridBirthYear").value;
-      let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
-      let birthDay = e.target.querySelector("#formGridBirthDay").value;
 
-      birthMonth = birthMonth.length === 2 ? "0" + birthMonth : birthMonth;
-      birthDay = birthDay.length === 2 ? "0" + birthDay : birthDay;
-
-      const birth =
-        birthYear.substring(0, birthYear.length-1) + "-" +
-        birthMonth.substring(0, birthMonth.length-1) + "-" +
-        birthDay.substring(0, birthDay.length-1);
-
-      const formData = new FormData();
-      formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
-      formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-      formData.append("username", defaultName ? defaultName : username);
-      formData.append("password", password);
-      formData.append("birth", birth);
-      formData.append("message", message);
-
-      dispatch({
-        type: SIGNUP_REQUEST,
-        data: formData
-      })
+    if(form.checkValidity() !== true) {
+      return;
     }
+
+    const password = e.target.querySelector("#formGridPassword").value;
+    let birthYear = e.target.querySelector("#formGridBirthYear").value;
+    let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
+    let birthDay = e.target.querySelector("#formGridBirthDay").value;
+
+    birthMonth = birthMonth.length === 2 ? "0" + birthMonth : birthMonth;
+    birthDay = birthDay.length === 2 ? "0" + birthDay : birthDay;
+
+    const birth =
+      birthYear.substring(0, birthYear.length-1) + "-" +
+      birthMonth.substring(0, birthMonth.length-1) + "-" +
+      birthDay.substring(0, birthDay.length-1);
+
+    const formData = new FormData();
+    formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
+    formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
+    formData.append("username", defaultName ? defaultName : username);
+    formData.append("password", password);
+    formData.append("birth", birth);
+    formData.append("isPublic", "true")
+
+    dispatch({
+      type: SIGNUP_REQUEST,
+      data: formData
+    })
     setValidated(true);
   }, [username, defaultName])
 
@@ -121,6 +116,7 @@ const signup = () => {
         res => {
           if(res.data) {
             alert("가능한 아이디 입니다!!!")
+            setUsername(res.data)
           } else {
             alert("중복된 아이디 입니다!!!")
           }
@@ -200,14 +196,6 @@ const signup = () => {
               <Form.Control type="file" multiple required/>
               <Form.Control.Feedback type="invalid">
                 프로필 배경사진을 입력해 주세요.
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group as={Row} controlId="formGridMessage" style={{paddingLeft:"10px", paddingRight: "10px", marginBottom: "4%"}}>
-              <Form.Label>상태 메세지</Form.Label>
-              <Form.Control type="text" placeholder="상태메세지" required/>
-              <Form.Control.Feedback type="invalid">
-                상태메세지를 입력해 주세요.
               </Form.Control.Feedback>
             </Form.Group>
             <Button disabled={!isAuthed} type="submit" variant="outline-dark" style={{marginLeft: "26%", width: "50%"}}>

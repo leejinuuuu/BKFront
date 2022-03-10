@@ -11,6 +11,7 @@ import {
 import {backURL, imageURL} from "../config/config";
 import AlbumModal from "./AlbumModal";
 import axios from "axios";
+import {BOOKMARK_POST_REQUEST, UNBOOKMARK_POST_REQUEST} from "../config/event/eventName/userEvent";
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
@@ -142,17 +143,53 @@ const PostModal = ({postInfo, show, setShow}) => {
     }
   }, [liked, postInfo])
 
-  const onClickDeletePost = useCallback((postId) => () => {
+  const onClickDeletePost = useCallback(() => {
     dispatch({
       type: DELETE_POST_REQUEST,
       params: {
-        postId: postId
+        postId: postInfo.id
       },
       plus: {
-        postId: postId
+        postId: postInfo.id
       }
     })
   }, [postInfo])
+
+  const [isBookmarked, setIsBookmarked] = useState(false)
+
+  useEffect(() => {
+    const bookmark = user.bookmarkedPosts;
+    let flag = false;
+    for(let i=0; i<bookmark.length; i++) {
+      if(bookmark[i].id === postInfo.id) {
+        flag = true;
+        break;
+      }
+    }
+    setIsBookmarked(flag)
+  }, [postInfo, user])
+
+  const onClickAddBookmark = useCallback(() => {
+    dispatch({
+      type: BOOKMARK_POST_REQUEST,
+      params: {
+        postId: postInfo.id,
+        accountId: user.id
+      }
+    })
+    setIsBookmarked(true)
+  }, [postInfo, user])
+
+  const onClickRemoveBookmark = useCallback(() => {
+    dispatch({
+      type: UNBOOKMARK_POST_REQUEST,
+      params: {
+        postId: postInfo.id,
+        accountId: user.id
+      }
+    })
+    setIsBookmarked(false)
+  }, [postInfo, user])
 
   return(
     <span>
@@ -194,20 +231,20 @@ const PostModal = ({postInfo, show, setShow}) => {
                           <div className="date">
                             {postInfo.createdAt.substring(0, 10)}
                           </div>
-                          {
+                        </div>
+                        {
                             postInfo.writer.name === user.username &&
-                              <div className="meta" style={{marginLeft:"30px"}} onClick={onClickDeletePost(postInfo.id)}>
-                                <a className="like">
+                            <div className="meta" style={{marginRight: "30px"}} onClick={onClickDeletePost}>
+                              <a className="like">
                                 <i className="delete icon"/> Delete
-                                </a>
-                              </div>
-                          }
-                        </div>
-                        <div className="meta">
-                          <a className="like">
-                            <i className="like icon"/> Follow
-                          </a>
-                        </div>
+                              </a>
+                            </div>
+                        }
+                        {/*<div className="meta">*/}
+                        {/*  <a className="like">*/}
+                        {/*    <i className="like icon"/> Follow*/}
+                        {/*  </a>*/}
+                        {/*</div>*/}
                       </div>
                     </div>
                   </div>
@@ -228,8 +265,14 @@ const PostModal = ({postInfo, show, setShow}) => {
                             <Image src="https://img.icons8.com/color/48/000000/like--v3.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/> :
                             <Image src="https://img.icons8.com/ios/50/000000/hearts--v1.png" style={{cursor: "pointer", width: "30px"}} onClick={onClickHeart}/>
                         }
-
                         <Image onClick={handleShowFavorite} src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/000000/external-bookmark-interface-kiranshastry-lineal-kiranshastry.png" style={{cursor: "pointer", width: "30px"}}/>
+                        {
+                          isBookmarked ?
+                              <Image style={{width: "25px", cursor: "pointer"}} onClick={onClickRemoveBookmark} src="https://img.icons8.com/external-phatplus-solid-phatplus/64/000000/external-check-essential-phatplus-solid-phatplus.png"/> :
+                              <Image style={{width: "25px", cursor: "pointer"}} onClick={onClickAddBookmark} src="https://img.icons8.com/external-becris-lineal-becris/64/000000/external-check-mintab-for-ios-becris-lineal-becris.png"/>
+
+                        }
+
                       </div>
                       <span className="ui icon input">
                         <input style={{width: "280px"}} type="text" placeholder={commentPicked ? "Reply..." : "Add..."} onChange={handleCommentChange} value={commentData}/>

@@ -184,7 +184,7 @@ const userReducer = (state = initialState, action) => {
       case CREATE_CLAN_FAILURE:
         draft.isCreatingClan = false;
         draft.isCreatedClan = false;
-        draft.createClanError = "ERROR";
+        draft.createClanError = "이름이 중복됩니다.";
         break;
       case GET_CLAN_DATA_REQUEST:
         draft.isGettingClanData = true;

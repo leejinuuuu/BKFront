@@ -50,6 +50,9 @@ const PostCard = ({postInfo, size}) => {
   }, [liked])
 
   const handleModalShow = useCallback((e) => {
+    if(!user) {
+      alert("로그인이 필요합니다!")
+    }
     setShow(true);
   }, [show])
 
@@ -85,7 +88,10 @@ const PostCard = ({postInfo, size}) => {
           </span>
         </div>
       </div>
-      <PostModal show={show} setShow={setShow} postInfo={postInfo}/>
+      {
+        user && <PostModal show={show} setShow={setShow} postInfo={postInfo}/>
+      }
+
     </div>
   )
 }

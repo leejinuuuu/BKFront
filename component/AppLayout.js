@@ -47,6 +47,7 @@ const AppLayout = ({ children }) => {
                                      setCookie("accessToken", "");
                                      setCookie("platform", "");
                                      setCookie("SUID", "");
+                                     router.push("/")
                                    }
                                  }
                                } href={"/"}>

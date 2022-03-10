@@ -8,24 +8,47 @@ import {useRouter} from "next/router";
 import {useCookies} from "react-cookie";
 import { signIn, signOut, useSession } from "next-auth/client"
 import GoogleButton from "react-google-button";
+import axios from "axios";
+import {backURL} from "../config/config";
 
 const login = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isLoggedIn, user, LoadingUserError } = useSelector(state => state.userReducer);
+  const { logInError, user, LoadingUserError} = useSelector(state => state.userReducer);
   const [cookies, setCookie] = useCookies(['user']);
   const [session, loadingSession] = useSession();
 
-  if(session) {
-    if(LoadingUserError || !user) {
-      router.push("/signup?google=" + session.user.name)
+  useEffect(() => {
+    if(session) {
+      axios
+          .get(backURL + "/username/check?username=" + session.user.name)
+          .then(
+              res => {
+                if(res.data) {
+                  router.push("/signup")
+                } else {
+                  setCookie("SUID", session.user.name, {path: "/"})
+                  router.push("/")
+                }
+              }
+          )
     } else if(user) {
-      setCookie("accessToken", user.accessToken, {path: "/"})
-      setCookie("platform", user.platform, {path: "/"})
-      setCookie("SUID", user.username, {path: "/"})
-      router.push("/")
+        if(!user.username) {
+            alert("아이디 혹은 비밀번호가 잘못되었습니다.")
+        } else {
+            setCookie("accessToken", user.accessToken, {path: "/"})
+            setCookie("platform", user.platform, {path: "/"})
+            setCookie("SUID", user.username, {path: "/"})
+            router.push("/")
+        }
     }
-  }
+
+    if(logInError) {
+      alert("아이디 혹은 비밀번호가 잘못되었습니다.")
+    }
+
+
+  }, [session, user, logInError])
 
   const handleSubmit = useCallback(e => {
     e.preventDefault();

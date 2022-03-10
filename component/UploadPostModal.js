@@ -35,23 +35,26 @@ const UploadPostModal = ({show, setShow}) => {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    let tagData = "";
-    hashtag.map(v => tagData += "#" + v);
+    if(user && user.id) {
+      let tagData = "";
+      hashtag.map(v => tagData += "#" + v);
 
-    const formData = new FormData();
-    formData.append("File", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("Pny", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("writer", user.id);
-    formData.append("title", e.target.querySelector("#formGroupEmail").value);
-    formData.append("hashtag", tagData);
-    formData.append("type", "image")
+      const formData = new FormData();
+      formData.append("File", e.target.querySelector("#formFileMultiple").files[0]);
+      formData.append("Pny", e.target.querySelector("#formFileMultiple").files[0]);
+      formData.append("writer", user.id);
+      formData.append("title", e.target.querySelector("#formGroupEmail").value);
+      formData.append("hashtag", tagData);
+      formData.append("type", "image")
 
-    dispatch({
-      type: UPLOAD_POST_REQUEST,
-      data: formData
-    })
-
-    setHashtag([]);
+      dispatch({
+        type: UPLOAD_POST_REQUEST,
+        data: formData
+      })
+      setHashtag([]);
+    } else {
+      alert("로그인을 하셔야 합니다!")
+    }
     setShow(false)
   }, [user, hashtag])
 

@@ -1,15 +1,21 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Button, Modal, Form} from "react-bootstrap";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {UPLOAD_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {CREATE_CLAN_REQUEST} from "../config/event/eventName/userEvent";
 
-const ClanMakeModal = ({show, setShow}) => {
+const CreateClanModal = ({show, setShow}) => {
 
   const dispatch = useDispatch();
   const handleClose = () => setShow(false);
 
-  const {user} = useSelector(state => state.userReducer)
+  const {user, createClanError} = useSelector(state => state.userReducer)
+
+  useEffect(() => {
+    if(createClanError) {
+      alert("이름이 중복됩니다.")
+    }
+  }, [createClanError])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +23,7 @@ const ClanMakeModal = ({show, setShow}) => {
     const formData = new FormData();
     formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
     formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-    formData.append("master", user.id);
+    formData.append("masterId", user.id);
     formData.append("name", e.target.querySelector("#formBasicTitle").value)
 
     dispatch({
@@ -56,4 +62,4 @@ const ClanMakeModal = ({show, setShow}) => {
   )
 }
 
-export default connect(state => state)(ClanMakeModal);
+export default connect(state => state)(CreateClanModal);
