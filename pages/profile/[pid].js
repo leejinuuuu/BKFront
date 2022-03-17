@@ -148,7 +148,7 @@ const Profile = () => {
             <Image style={{height: "500px", objectFit: "cover"}} width="100%" src={imageURL + myProfile.backgroundImage}/>
           </div>
           <div style={{textAlign: "center"}}>
-            <Image style={{marginTop: "-150px", height: "200px", objectFit: "cover"}} width="200px" src={"http://localhost:8081/image/" + myProfile.profileImage} roundedCircle  />
+            <Image style={{marginTop: "-150px", height: "200px", objectFit: "cover"}} width="200px" src={imageURL + myProfile.profileImage} roundedCircle  />
             <h2>{myProfile.username}</h2>
             <p>{myProfile.message}</p>
           </div>
