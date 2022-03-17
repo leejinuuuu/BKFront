@@ -35,10 +35,6 @@ const signup = () => {
       setUsernameChecked(true)
     }
 
-    if(isSignedUp && !usernameChecked) {
-      alert("아이디를 확인해 주세요!!!!")
-    }
-
     if(isSignedUp && usernameChecked) {
       alert("SignUp SUCCESSED!!!")
       router.push("/login")
@@ -54,33 +50,37 @@ const signup = () => {
       return;
     }
 
-    const password = e.target.querySelector("#formGridPassword").value;
-    let birthYear = e.target.querySelector("#formGridBirthYear").value;
-    let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
-    let birthDay = e.target.querySelector("#formGridBirthDay").value;
+    if(usernameChecked) {
+      const password = e.target.querySelector("#formGridPassword").value;
+      let birthYear = e.target.querySelector("#formGridBirthYear").value;
+      let birthMonth = e.target.querySelector("#formGridBirthMonth").value;
+      let birthDay = e.target.querySelector("#formGridBirthDay").value;
 
-    birthMonth = birthMonth.length === 2 ? "0" + birthMonth : birthMonth;
-    birthDay = birthDay.length === 2 ? "0" + birthDay : birthDay;
+      birthMonth = birthMonth.length === 2 ? "0" + birthMonth : birthMonth;
+      birthDay = birthDay.length === 2 ? "0" + birthDay : birthDay;
 
-    const birth =
-      birthYear.substring(0, birthYear.length-1) + "-" +
-      birthMonth.substring(0, birthMonth.length-1) + "-" +
-      birthDay.substring(0, birthDay.length-1);
+      const birth =
+        birthYear.substring(0, birthYear.length-1) + "-" +
+        birthMonth.substring(0, birthMonth.length-1) + "-" +
+        birthDay.substring(0, birthDay.length-1);
 
-    const formData = new FormData();
-    formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-    formData.append("username", defaultName ? defaultName : username);
-    formData.append("password", password);
-    formData.append("birth", birth);
-    formData.append("isPublic", "true")
+      const formData = new FormData();
+      formData.append("username", defaultName ? defaultName : username);
+      formData.append("password", password);
+      formData.append("birth", birth);
+      formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
+      formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
+      formData.append("isPublic", "true")
 
-    dispatch({
-      type: SIGNUP_REQUEST,
-      data: formData
-    })
-    setValidated(true);
-  }, [username, defaultName])
+      dispatch({
+        type: SIGNUP_REQUEST,
+        data: formData
+      })
+      setValidated(true);
+    } else {
+      alert("아이디를 확인해 주세요!!!!")
+    }
+  }, [username, defaultName, usernameChecked])
 
   const onChangeCode = useCallback(e => {
     setCode(e.target.value)
