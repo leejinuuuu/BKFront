@@ -13,7 +13,7 @@ const signup = () => {
   const dispatch = useDispatch();
   const {isSignedUp, emailCode} = useSelector(state => state.userReducer)
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  const [removeCookie] = useCookies(['user']);
   const [session, loadingSession] = useSession();
 
   const [isAuthed, setIsAuthed] = useState(true);
@@ -41,8 +41,7 @@ const signup = () => {
 
     if(isSignedUp && usernameChecked) {
       alert("SignUp SUCCESSED!!!")
-      setCookie("SUID", username, {path: "/"})
-      router.push("/")
+      router.push("/login")
     }
   }, [isSignedUp, usernameChecked, router.query.google])
 

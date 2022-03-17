@@ -14,11 +14,14 @@ const PostCard = ({postInfo, size}) => {
 
   useEffect(() => {
     setLiked(false)
-    postInfo.likerAccount.map(v => {
-      if(v.id === user.id) {
-        setLiked(true)
-      }
-    })
+    if(user) {
+      postInfo.likerAccount.map(v => {
+        if(v.id === user.id) {
+          setLiked(true)
+        }
+      })
+    }
+
   }, [postInfo.likerAccount])
 
   const onClickHeart = useCallback((e) => {
@@ -62,7 +65,7 @@ const PostCard = ({postInfo, size}) => {
         <Link href={
           postInfo.isAccountWriter ? "/profile/" + postInfo.writer.name : "/clan/" + postInfo.writer.name
         }>
-          <div className="content">
+          <div className="content" style={{cursor: "pointer"}}>
             <div className="right floated meta">{postInfo.createdAt.substring(0, 10)}</div>
             <img style={{ objectFit: "cover" }} className="ui avatar image" src={imageURL + postInfo.writer.profileImage}/>{postInfo.writer.name}
           </div>

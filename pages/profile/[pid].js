@@ -110,16 +110,16 @@ const Profile = () => {
       params: {
         albumId: albumId,
         name: albumName,
-        isPublic: isPublic ? "false" : "true"
+        isPublic: isPublic ? "true" : "false"
       },
       plus: {
         albumId: albumId,
         name: albumName,
-        isPublic: isPublic ? "false" : "true"
+        isPublic: isPublic ? "true" : "false"
       }
     })
     setShowInput(false)
-  }, [albumName])
+  }, [albumName, isPublic])
 
   const handleInputClose = () => {
     setTargetAlbum("")
@@ -135,7 +135,8 @@ const Profile = () => {
   }
 
   const onClickRadio = useCallback(() => {
-  setIsPublic(!isPublic)
+    setIsPublic(!isPublic)
+    console.log(isPublic)
   }, [isPublic])
 
   return (

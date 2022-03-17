@@ -11,7 +11,6 @@ import RecommendAccount from "../component/RecommendAccount";
 import Post from "../component/Post";
 import {LOAD_ALL_POST_REQUEST, LOAD_TOP20_LIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {useSession} from "next-auth/client";
-import SimpleSlider from "../component/SimpleSlider";
 
 const home = () => {
   const router = useRouter();
@@ -87,17 +86,20 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
     const cookie = req ? req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';
     axios.defaults.withCredentials = true;
-
     if (req) {
       if (cookie) {
         axios.defaults.headers.Cookie = cookie;
-      }
-      if(cookie.includes("SUID")) {
-        store.dispatch({
-          type: LOAD_USER_REQUEST
-        });
-      }
 
+        const cookieMap = new Map()
+        cookie.split("; ").map(v => v.split("=")).map(v => {
+          cookieMap.set(v[0], v[1])
+        })
+        if(cookieMap.get("SUID")) {
+          store.dispatch({
+            type: LOAD_USER_REQUEST
+          });
+        }
+      }
       store.dispatch({
         type: LOAD_ALL_POST_REQUEST,
         params: {

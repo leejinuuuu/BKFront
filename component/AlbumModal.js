@@ -9,7 +9,7 @@ import {
 } from "../config/event/eventName/userEvent";
 import AlbumCheckBox from "./AlbumCheckBox";
 
-const AlbumModal = ({show, setShow, favoriteList: album, postInfo}) => {
+const AlbumModal = ({show, setShow, postInfo}) => {
   const {user} = useSelector(state => state.userReducer)
   const dispatch = useDispatch();
 
@@ -76,8 +76,8 @@ const AlbumModal = ({show, setShow, favoriteList: album, postInfo}) => {
   const onClickCreateList = () => {
     let flag = false;
 
-    for(let i=0; i<album.length; i++) {
-      if(album[i].name === listName) {
+    for(let i=0; i<user.albums.length; i++) {
+      if(user.albums[i].name === listName) {
         flag = true;
       }
     }
@@ -155,7 +155,7 @@ const AlbumModal = ({show, setShow, favoriteList: album, postInfo}) => {
       </Modal.Header>
       <Modal.Body>
         {
-          album.map(v => {
+          user.albums.map(v => {
             return (
               <AlbumCheckBox key={v.id} onClickCheckBox={onClickCheckBox} postId={postInfo.id} listInfo={v} posts={v.posts}/>
             )

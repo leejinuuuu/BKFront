@@ -26,6 +26,16 @@ const AppLayout = ({ children }) => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
+  const onClickLogout = useCallback(() => {
+    if(session) return signOut();
+    else {
+      setCookie("accessToken", "");
+      setCookie("platform", "");
+      setCookie("SUID", "");
+      router.push("/")
+    }
+  }, [session, cookies])
+
   return (
     <div>
       <Navbar bg="light" expand="lg" style={{position: "fixed", width: "100%", zIndex: 100}}>
@@ -39,18 +49,7 @@ const AppLayout = ({ children }) => {
                 <Dropdown.Item eventKey="1" href={"/profile/" + user.username}>Profile</Dropdown.Item>
                 <Dropdown.Item eventKey="2" href={"/alarm"}>Alarm</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item eventKey="4"
-                               onClick={
-                                 () => {
-                                   if(session) return signOut();
-                                   else {
-                                     setCookie("accessToken", "");
-                                     setCookie("platform", "");
-                                     setCookie("SUID", "");
-                                     router.push("/")
-                                   }
-                                 }
-                               } href={"/"}>
+                <Dropdown.Item eventKey="4" onClick={onClickLogout} href={"/"}>
                   Log-Out</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>:

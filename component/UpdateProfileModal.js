@@ -5,6 +5,8 @@ import {UPLOAD_POST_REQUEST} from "../config/event/eventName/postEvent";
 import {CREATE_CLAN_REQUEST, SIGNUP_REQUEST, UPDATE_PROFILE_REQUEST} from "../config/event/eventName/userEvent";
 import {useCookies} from "react-cookie";
 import {useRouter} from "next/router";
+import axios from "axios";
+import {backURL} from "../config/config";
 
 const ClanMakeModal = ({show, setShow, profile}) => {
   const router = useRouter()
@@ -15,34 +17,56 @@ const ClanMakeModal = ({show, setShow, profile}) => {
 
   const [username, setUsername] = useState("")
   const [isPublic, setIsPublic] = useState(true)
+  const [isValidUsername, setIsValidUsername] = useState(false)
 
   const onChangeUsername = (e) => {
     setUsername(e.target.value)
   }
 
+  const onClickUsernameCheck = useCallback(e => {
+    axios
+        .get(backURL + "/username/check?username=" + username)
+        .then(
+            res => {
+              if(res.data) {
+                alert("가능한 아이디 입니다!!!")
+                setUsername(res.data)
+              } else {
+                alert("중복된 아이디 입니다!!!")
+              }
+              setIsValidUsername(res.data)
+            }
+        )
+  }, [username, isValidUsername])
+
   const handleSubmit = useCallback( async e => {
     e.preventDefault();
     e.stopPropagation();
 
-    const formData = new FormData();
-    formData.append("accountId", profile.id)
-    formData.append("username", username);
-    formData.append("password", e.target.querySelector("#formGridPassword").value);
-    formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
-    formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
-    formData.append("message", e.target.querySelector("#formGridMessage").value);
-    formData.append("isPublic", isPublic ? "false" : "true")
+    if(isValidUsername || !username || username === "") {
+      const formData = new FormData();
+      formData.append("accountId", profile.id)
+      let finalUsername = username
+      if(username === "" || !username) {
+        finalUsername = profile.username
+      }
+      formData.append("username", finalUsername);
+      formData.append("password", e.target.querySelector("#formGridPassword").value);
+      formData.append("profile", e.target.querySelector("#formFileMultiple").files[0]);
+      formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
+      formData.append("message", e.target.querySelector("#formGridMessage").value);
+      formData.append("isPublic", isPublic ? "true" : "false")
 
-    dispatch({
-      type: UPDATE_PROFILE_REQUEST,
-      data: formData
-    })
-    if(username) {
-      await setCookie("SUID", username, {path: "/"})
+      dispatch({
+        type: UPDATE_PROFILE_REQUEST,
+        data: formData
+      })
+      alert("수정이 완료되었습니다.")
+      await router.push("/")
+    } else {
+      alert("아이디 중복을 확인해 주세요")
     }
-    alert("수정이 완료되었습니다.")
-    await router.push("/")
-  }, [username, profile])
+  }, [username, profile, isValidUsername])
 
   const onClickRadio = useCallback((e) => {
     setIsPublic(!isPublic)
@@ -65,7 +89,7 @@ const ClanMakeModal = ({show, setShow, profile}) => {
                 value={username}
                 onChange={onChangeUsername}
               />
-              <Button variant="outline-secondary" id="button-addon2">
+              <Button variant="outline-secondary" id="button-addon2" onClick={onClickUsernameCheck}>
                 중복 체크
               </Button>
             </InputGroup>

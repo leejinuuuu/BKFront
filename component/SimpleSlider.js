@@ -1,8 +1,10 @@
-import React, {Component, useReducer} from "react";
+import React, {Component, useCallback, useReducer, useState} from "react";
 import Slider from "react-slick";
 import {Col, Image, Row} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {imageURL} from "../config/config";
+import PostModal from "./PostModal";
+import SlideImage from "./SlideImage";
 
 const SimpleSlider = () => {
   const { top20LikedPosts } = useSelector(state => state.postReducer)
@@ -15,19 +17,29 @@ const SimpleSlider = () => {
     slidesToScroll: 1
   };
 
+  const [show, setShow] = useState(false)
+  const onClickShow = useCallback((e) => {
+    setShow(true)
+  }, [show])
+
   return (
-    <Slider {...settings} style={{marginBottom: "50px"}}>
-      <table>
-        <tr>
-          {
-            top20LikedPosts.map(v => (
-              <td><Image width="60" height="60" style={{margin: "19px", objectFit: "cover"}} roundedCircle src={ imageURL + v.image}/></td>
-            ))
-          }
-        </tr>
-      </table>
-      <div/>
-    </Slider>
+    <div>
+      <Slider {...settings} style={{marginBottom: "50px"}}>
+        <table>
+          <tr>
+            {
+              top20LikedPosts.map(v => (
+                <td>
+                  <SlideImage postInfo={v}/>
+                </td>
+              ))
+            }
+          </tr>
+        </table>
+        <div/>
+      </Slider>
+    </div>
+
   );
 }
 

@@ -21,13 +21,13 @@ const login = () => {
   useEffect(() => {
     if(session) {
       axios
-          .get(backURL + "/username/check?username=" + session.user.name)
+          .get(backURL + "/username/id?username=" + session.user.name)
           .then(
               res => {
-                if(res.data) {
+                if(!res.data) {
                   router.push("/signup")
                 } else {
-                  setCookie("SUID", session.user.name, {path: "/"})
+                  setCookie("SUID", res.data, {path: "/"})
                   router.push("/")
                 }
               }
@@ -38,7 +38,7 @@ const login = () => {
         } else {
             setCookie("accessToken", user.accessToken, {path: "/"})
             setCookie("platform", user.platform, {path: "/"})
-            setCookie("SUID", user.username, {path: "/"})
+            setCookie("SUID", user.id, {path: "/"})
             router.push("/")
         }
     }

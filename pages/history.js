@@ -21,9 +21,11 @@ const history = () => {
         <ListGroup style={{marginTop: "2%"}}>
           {user.history.map(v => {
             return (
-              <Link href={"/post/" + v.postId}>
-                <ListGroup.Item style={{cursor: "pointer"}}>{v.content + "/" + v.createdAt}</ListGroup.Item>
-              </Link>
+              v.content.includes("팔로우") ?
+                <ListGroup.Item>{v.content + "/" + v.createdAt}</ListGroup.Item> :
+                <Link href={"/post/" + v.postId}>
+                  <ListGroup.Item style={{cursor: "pointer"}}>{v.content + "/" + v.createdAt}</ListGroup.Item>
+                </Link>
 
             )
           })}

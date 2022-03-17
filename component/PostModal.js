@@ -12,6 +12,7 @@ import {backURL, imageURL} from "../config/config";
 import AlbumModal from "./AlbumModal";
 import axios from "axios";
 import {BOOKMARK_POST_REQUEST, UNBOOKMARK_POST_REQUEST} from "../config/event/eventName/userEvent";
+import Link from "next/link"
 
 const PostModal = ({postInfo, show, setShow}) => {
   const dispatch = useDispatch()
@@ -106,7 +107,7 @@ const PostModal = ({postInfo, show, setShow}) => {
 
   useEffect(() => {
     setLiked(false)
-    if(typeof postInfo.likerAccount !== "undefined") {
+    if(typeof postInfo.likerAccount !== "undefined" && user) {
       postInfo.likerAccount.map(v => {
         if(v.id === user.id) {
           setLiked(true)
@@ -158,15 +159,17 @@ const PostModal = ({postInfo, show, setShow}) => {
   const [isBookmarked, setIsBookmarked] = useState(false)
 
   useEffect(() => {
-    const bookmark = user.bookmarkedPosts;
-    let flag = false;
-    for(let i=0; i<bookmark.length; i++) {
-      if(bookmark[i].id === postInfo.id) {
-        flag = true;
-        break;
+    if(user) {
+      const bookmark = user.bookmarkedPosts;
+      let flag = false;
+      for(let i=0; i<bookmark.length; i++) {
+        if(bookmark[i].id === postInfo.id) {
+          flag = true;
+          break;
+        }
       }
+      setIsBookmarked(flag)
     }
-    setIsBookmarked(flag)
   }, [postInfo, user])
 
   const onClickAddBookmark = useCallback(() => {
@@ -226,19 +229,26 @@ const PostModal = ({postInfo, show, setShow}) => {
                       <div className="content">
                         <div className="summary">
                           <a className="user">
-                            {postInfo.writer.name}
+                            <Link href={"/profile/" + postInfo.writer.name}>{postInfo.writer.name}</Link>
                           </a> {"- " + postInfo.title}
                           <div className="date">
                             {postInfo.createdAt.substring(0, 10)}
                           </div>
                         </div>
+                        <div>
+                          {
+                            postInfo.hashtag.map(v => <span>{"#" + v}</span>)
+                          }
+                        </div>
                         {
+                          user && (
                             postInfo.writer.name === user.username &&
                             <div className="meta" style={{marginRight: "30px"}} onClick={onClickDeletePost}>
                               <a className="like">
                                 <i className="delete icon"/> Delete
                               </a>
                             </div>
+                          )
                         }
                         {/*<div className="meta">*/}
                         {/*  <a className="like">*/}

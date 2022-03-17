@@ -211,7 +211,7 @@ const Post = () => {
           </Row>
         </Col>
       </Row>
-      { user && <AlbumModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
+      { (user && postInfo) && <AlbumModal show={showFavorite} setShow={setShowFavorite} favoriteList={user.favorites} postInfo={postInfo}/>}
     </AppLayout>
   )
 }
