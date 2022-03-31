@@ -12,7 +12,6 @@ import {
   LOAD_ALL_POST_REQUEST,
   LOAD_ALL_POST_SUCCESS,
   LOAD_FULL_POST_SUCCESS,
-  LOAD_TOP20_LIKED_POST_REQUEST,
   LOAD_TOP20_LIKED_POST_SUCCESS,
   PICK_COMMENT_TO_REPLY,
   SORT_POSTS,
@@ -139,7 +138,7 @@ const postReducer = (state = initialState, action) => {
           let curPost = draft.mainPost[i];
           for(let j=0; j<curPost.comment.length; j++) {
             if(curPost.comment[j].id === draft.commentToReply) {
-              curPost.comment[j].replyComment.push(action.data)
+              draft.mainPost[i].comment[j].replyComment.push(action.data)
               break;
             }
           }

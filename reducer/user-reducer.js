@@ -124,6 +124,7 @@ const userReducer = (state = initialState, action) => {
       case SIGNUP_SUCCESS:
         draft.isSignedUp = true;
         draft.isSigningUp = false;
+        draft.user = action.data
         break;
       case SIGNUP_FAILURE:
         draft.isSignedUp = false;

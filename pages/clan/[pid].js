@@ -90,6 +90,7 @@ const clan = () => {
           <div style={{textAlign: "center"}}>
             <Image style={{marginTop: "-150px"}} width="200px" src={imageURL + clanInfo.profileImage} roundedCircle  />
             <h2>{pid}</h2>
+            <div>{clanInfo.message}</div>
           </div>
           <div style={{textAlign: "center", margin: "30px"}}>
             <div >

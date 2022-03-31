@@ -25,6 +25,7 @@ const CreateClanModal = ({show, setShow}) => {
     formData.append("background", e.target.querySelector("#formFileMultiple2").files[0]);
     formData.append("masterId", user.id);
     formData.append("name", e.target.querySelector("#formBasicTitle").value)
+    formData.append("message", e.target.querySelector("#formBasicMessage").value)
 
     dispatch({
       type: CREATE_CLAN_REQUEST,
@@ -42,15 +43,19 @@ const CreateClanModal = ({show, setShow}) => {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicTitle">
-            <Form.Label>Clan name</Form.Label>
+            <Form.Label>이름</Form.Label>
+            <Form.Control type="text" placeholder="Enter name" />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicMessage">
+            <Form.Label>상태메세지</Form.Label>
             <Form.Control type="text" placeholder="Enter name" />
           </Form.Group>
           <Form.Group controlId="formFileMultiple" className="mb-3">
-            <Form.Label>Select ProfileImage</Form.Label>
+            <Form.Label>프로필</Form.Label>
             <Form.Control type="file" multiple />
           </Form.Group>
           <Form.Group controlId="formFileMultiple2" className="mb-3">
-            <Form.Label>Select BackgroundImage</Form.Label>
+            <Form.Label>배경 이미지</Form.Label>
             <Form.Control type="file" multiple />
           </Form.Group>
           <Button variant="primary" type="submit">

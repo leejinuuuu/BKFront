@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN_REQUEST} from "../config/event/eventName/userEvent";
+import {LOAD_USER_REQUEST, LOGIN_REQUEST} from "../config/event/eventName/userEvent";
 import Link from 'next/link'
 import {Divider} from "semantic-ui-react";
 import {useRouter} from "next/router";
@@ -10,6 +10,9 @@ import { signIn, signOut, useSession } from "next-auth/client"
 import GoogleButton from "react-google-button";
 import axios from "axios";
 import {backURL} from "../config/config";
+import wrapper from "../store/store-wrapper";
+import {LOAD_ALL_POST_REQUEST, LOAD_TOP20_LIKED_POST_REQUEST} from "../config/event/eventName/postEvent";
+import {END} from "redux-saga";
 
 const login = () => {
   const dispatch = useDispatch();
@@ -94,7 +97,6 @@ const login = () => {
       </Col>
       <Col xs={"4"}/>
     </Row>
-
   )
 }
 
