@@ -88,7 +88,7 @@ const AppLayout = ({ children }) => {
             as={ButtonGroup}
             id={`dropdown-variants-Secondary`}
             variant="outline-secondary"
-            title="Menu"
+            title="Menuuuuuuuu"
           >
             <Dropdown.Item eventKey="1" href={"/history"}>
               History
