@@ -118,5 +118,4 @@ export const getServerSideProps = wrapper.getServerSideProps(store =>
   }
 );
 
-
 export default home;

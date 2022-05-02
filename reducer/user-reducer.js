@@ -99,11 +99,12 @@ const userReducer = (state = initialState, action) => {
         draft.isLoggingIn = false;
         draft.isLoggedIn = true;
         draft.user = action.data;
+        draft.logInError = "";
         break;
       case LOGIN_FAILURE:
         draft.isLoggedIn = false;
         draft.isLoggingIn = true;
-        draft.logInError = action.error;
+        draft.logInError = "error";
         break;
       case LOGOUT_REQUEST:
         draft.isLoggingOut = true;
