@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=dev next dev",
     "test": "cross-env NODE_ENV=dev jest",
     "build": "cross-env NODE_ENV=production next build",
-    "start": "cross-env NODE_ENV=production NEXTAUTH_URL=https://peniyo.com next start",
+    "start": "set PORT=3001 && cross-env NODE_ENV=production NEXTAUTH_URL=https://peniyo.com next start",
     "lint": "cross-env NODE_ENV=dev next lint"
   },
   "dependencies": {
